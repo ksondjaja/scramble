@@ -1,0 +1,122 @@
+body{
+    font-family: Helvetica, sans-serif;
+}
+.title{
+    font-family: Helvetica, sans-serif;
+    font-size: 32px;
+    color: #2b1257;
+    top: 25px;
+    text-align: center;
+    font-weight: bold;
+}
+.start{
+    position: absolute;
+    display: block;
+    width: 220px;
+    height: 60px;
+    top: 70px;
+    left: 20px;
+    border: 3px solid #2b1257;
+    font-size: 14px;
+    font-family: Helvetica, sans-serif;
+}
+.dropbox{
+    position: absolute;
+    display: block;
+    width: 220px;
+    height: 60px;
+    top: 70px;
+    border: 3px solid #2b1257;
+}
+.end{
+    position: absolute;
+    display: block;
+    width: 220px;
+    height: 60px;
+    top: 70px;
+    border: 3px solid #2b1257;
+    font-size: 14px;
+    font-family: Helvetica, sans-serif;
+}
+.card {
+    position: absolute;
+    display: block;
+    width: 200px;
+    height: 50px;
+    top: 30vh;
+    background: lightsalmon;
+    border-radius: 6px;
+    transition: 0.1s;
+}
+.content{
+    user-select: none;
+    text-align: center;
+    font-size: 14px;
+    font-family: Helvetica, sans-serif;
+    padding-top: 15px;
+}
+#time{
+    top: 75vh;
+    left: 20px;
+    position: absolute;
+    font-size: 32px;
+    font-family: Helvetica, sans-serif;
+    font-weight: bold;
+    color: cadetblue;
+}
+#info{
+    top: 75vh;
+    left: 50%;
+    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%);
+    position: absolute;
+    font-size: 32px;
+    font-family: Helvetica, sans-serif;
+    font-weight: bold;
+}
+#nextbutton{
+    top: 75vh;
+    left: 88vw;
+    position: absolute;
+}
+.fakebutton{
+    background: white;
+    color: cadetblue;
+    border: 2px solid cadetblue;
+    height: 60px;
+    width: 100px;
+}
+.fakebutton:hover{
+    background: cadetblue;
+    color: white;
+    border: 2px solid cadetblue;
+    cursor: pointer;
+}
+.fakebuttontext{
+    font-size: 18px;
+    font-family: Helvetica, sans-serif;
+    text-decoration: none;
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%);
+    text-align: center;
+}
+.preview{
+    text-align: center;
+    border-collapse: collapse;
+}
+.preview th{
+    padding-left: 10px;
+    padding-right: 10px;
+    border-bottom: 1px solid black;
+    border-left: 10px solid white;
+    border-right: 10px solid white;
+}
+.preview td{
+    padding-left: 10px;
+    padding-right: 10px;
+    border-left: 10px solid white;
+    border-right: 10px solid white;
+}

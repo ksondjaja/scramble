@@ -1,0 +1,45 @@
+CREATE TABLE `scramble_to_approve` (
+  `game_id` int unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `first_name` varchar(64) NOT NULL,
+  `user_email` varchar(120) NOT NULL,
+  `submit_time` datetime NOT NULL,
+  `game_type` enum('video','text','pictures','mixed') NOT NULL,
+  `game_length` int DEFAULT NULL,
+  `game_category` enum('Abbigliamento','Albergo','Banca','Bar/Ristorante','Casa','Chiaroveggente','Concerto','Dottore','Meccanico','Mercato','Mezzi di comunicazione','Mezzi di trasporto','Scuola','Tempo') DEFAULT NULL,
+  `game_title` varchar(255) NOT NULL,
+  `game_content` text NOT NULL,
+  PRIMARY KEY (`game_id`),
+  UNIQUE KEY `game_id` (`game_id`)
+);
+
+CREATE TABLE `scramble_approved` (
+  `game_id` int unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `first_name` varchar(64) NOT NULL,
+  `user_email` varchar(120) NOT NULL,
+  `submit_time` datetime NOT NULL,
+  `game_type` enum('video','text','pictures','mixed') NOT NULL,
+  `game_length` int DEFAULT NULL,
+  `game_category` enum('Abbigliamento','Albergo','Banca','Bar/Ristorante','Casa','Chiaroveggente','Concerto','Dottore','Meccanico','Mercato','Mezzi di comunicazione','Mezzi di trasporto','Scuola','Tempo') DEFAULT NULL,
+  `game_title` varchar(255) NOT NULL,
+  `game_content` text NOT NULL,
+  `approved_time` datetime NOT NULL,
+  PRIMARY KEY (`game_id`),
+  UNIQUE KEY `game_id` (`game_id`)
+);
+
+
+CREATE TABLE `scramble_scores` (
+  `score_id` int unsigned NOT NULL AUTO_INCREMENT,
+  `game_epoch_time` bigint NOT NULL,
+  `game_time` time NOT NULL,
+  `user_id` int NOT NULL,
+  `first_name` varchar(64) NOT NULL,
+  `game_difficulty` enum('easy','medium','difficult') NOT NULL,
+  `game_type` enum('video','text','pictures','mixed') NOT NULL,
+  `game_id` int NOT NULL,
+  `submit_time` datetime NOT NULL,
+  PRIMARY KEY (`score_id`),
+  UNIQUE KEY `score_id` (`score_id`)
+);

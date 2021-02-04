@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Sequence Reordering Game
+{% endblock title %}
+
+{% block links %}
+    <link rel="stylesheet" type="text/css" media="screen and (min-width: 768px)" href={{ url_for('static', filename='css/scramble/showgames.css') }}>
+    <link rel="stylesheet" type="text/css" media="screen and (max-width: 767px)" href={{ url_for('static', filename='css/scramble/showgames_sm.css') }}>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% endblock links %}
+
+{% block scripts %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function(){
+            const dividers = document.querySelectorAll('.divider');
+            const tablediv = document.querySelectorAll('#tablediv');
+            var div1 = true;
+            var div2 = false;
+
+            dividers[0].style.background = '#DED7FA';
+            tablediv[0].style.display = 'table';
+            tablediv[1].style.display = 'none';
+
+            dividers[0].onclick = function(){
+                dividers[0].style.background = '#DED7FA';
+                dividers[1].style.background = '#F1EEFD';
+                tablediv[0].style.display = 'table';
+                tablediv[1].style.display = 'none';
+                div1 = true;
+                div2 = false;
+            }
+
+            dividers[1].onclick = function(){
+                dividers[0].style.background = '#F1EEFD';
+                dividers[1].style.background = '#DED7FA';
+                tablediv[0].style.display = 'none';
+                tablediv[1].style.display = 'table';
+                div1 = false;
+                div2 = true;
+            }
+
+            dividers.forEach(function(divider){
+                divider.onmouseover = function(){
+                    divider.style.background =  '#DED7FA';
+                }
+                divider.onmouseout = function(){
+                    if(div1==false){
+                        dividers[0].style.background = '#F1EEFD';
+                    }
+                    if(div2==false){
+                        dividers[1].style.background = '#F1EEFD';
+                    }
+                }
+            })
+        })
+    </script>
+{% endblock scripts %}
+
+{% block content %}
+    <div id="top-btn">
+        <a href={{  url_for('scramble.index')  }} class="smlbtn"><div class="fakebuttonsml"><div class="fakebuttonsmltext">Home</div></div></a>
+    </div>
+
+    <div class="main">
+        <h2>{{  manage_title  }}</h2><br>
+        <div class="databases">
+            <div class="divider">Games to Approve</div>
+            <div class="divider">Approved Games</div>
+        </div>
+        <div id="tablediv">
+            <table>
+                <th>Preview</th>
+                <th>ID</th>
+                <th>Type</th>
+                <th>Length</th>
+                <th>Category</th>
+                <th>Title</th>
+                <th>Submitted</th>
+                {% if current_user.is_admin==1 %}
+                    <th>Submitter</th>
+                    <th>Contact</th>
+                    <th>Approve</th>
+                {% endif %}
+                <th>Discard</th>
+                {% for game in to_approve %}
+                    <tr>
+                        {% if current_user.is_admin==1 %}
+                            <td><a href={{  url_for('scramble.adminpreview', table='scramble_to_approve', game_id=game.game_id)  }}><div class="previewgame">&#9658</div></a></td>
+                        {% else %}
+                            <td><a href={{  url_for('scramble.userpreview', table='scramble_to_approve', game_id=game.game_id)  }}><div class="previewgame">&#9658</div></a></td>
+                        {% endif %}
+                        <td>{{  game.game_id  }}</td>
+                        <td>{{  game.game_type  }}</td>
+                        <td>{{  game.game_length  }}</td>
+                        <td>{{  game.game_category  }}</td>
+                        <td>{{  game.game_title  }}</td>
+                        <td>{{  game.submit_time  }}</td>
+                        {% if current_user.is_admin==1 %}
+                            <td>{{  game.first_name  }}</td>
+                            <td>{{  game.user_email  }}</td>
+                            <td><a href={{  url_for('scramble.adminapprove', game_id=game.game_id)  }}><div class="approve">&#x2714</div></a></td>
+                        {% endif %}
+                        <td><a href={{  url_for('scramble.admindiscard', table="scramble_to_approve", game_id=game.game_id)  }}><div class="discard">&#x2718</div></a></td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <div id="tablediv">
+            <table>
+                <th>Preview</th>
+                <th>ID</th>
+                <th>Type</th>
+                <th>Length</th>
+                <th>Category</th>
+                <th>Title</th>
+                <th>Submitted</th>
+                {% if current_user.is_admin==1 %}
+                    <th>Approved</th>
+                    <th>Submitter</th>
+                    <th>Contact</th>
+                    <th>Delete</th>
+                {% endif %}
+                {% for game in approved %}
+                    <tr>
+                        {% if current_user.is_admin==1 %}
+                            <td><a href={{  url_for('scramble.adminpreview', table='scramble_approved', game_id=game.game_id)  }}><div class="previewgame">&#9658</div></a></td>
+                        {% else %}
+                            <td><a href={{  url_for('scramble.userpreview', table='scramble_approved', game_id=game.game_id)  }}><div class="previewgame">&#9658</div></a></td>
+                        {% endif %}
+                        <td>{{  game.game_id  }}</td>
+                        <td>{{  game.game_type  }}</td>
+                        <td>{{  game.game_length  }}</td>
+                        <td>{{  game.game_category  }}</td>
+                        <td>{{  game.game_title  }}</td>
+                        <td>{{  game.submit_time  }}</td>
+                        {% if current_user.is_admin==1 %}
+                            <td>{{  game.approved_time  }}</td>
+                            <td>{{  game.first_name  }}</td>
+                            <td>{{  game.user_email  }}</td>
+                            <td><a href={{  url_for('scramble.admindiscard', table='scramble_approved', game_id=game.game_id)  }}><div class="discard">&#x2718</div></a></td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+{% endblock content %}

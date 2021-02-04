@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Sequence Reordering Game</title>
+    <link rel="stylesheet" type="text/css" media="screen and (min-width: 640px)" href={{ url_for('static', filename='css/scramble/game.css') }}>
+    <link rel="stylesheet" type="text/css" media="screen and (max-width: 639px)" href={{ url_for('static', filename='css/scramble/game_sm.css') }}>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    {% if game_type=='text' %}
+        <script src={{ url_for('static', filename='js/scramble/textgame.js') }}></script>
+    {% elif game_type=='video' %}
+        <script src={{ url_for('static', filename='js/scramble/videogame.js') }}></script>
+    {% endif %}
+</head>
+<body>
+    <div id="user">Logged in as {{  first_name  }}</div>
+    <div class="head">
+
+        {% if mode=='createpreview'%}
+            <a href={{ url_for('scramble.create')  }}><div class="fakebutton"><div class="fakebuttontext">Back</div></div></a>
+        {% elif mode=='game' %}
+            <div id="backbutton">
+                <a href={{ url_for('scramble.index')  }}><div class="discardbutton"><div class="fakebuttontext">Quit Game</div></div></a>
+            </div>
+            <div id="nextbutton" style="display:none">
+                <form id="submittimebutton" action={{  url_for('scramble.submittime')  }} method="post"></form>
+            </div>
+        {% else %}
+            <div id="backbutton">
+                <a href={{ url_for('scramble.managegames')  }}><div class="fakebutton"><div class="fakebuttontext">Back</div></div></a>
+            </div>
+        {% endif %}
+
+        <div class="title">
+            Place the cards in the right sequence<br>
+            <div id="timer">
+                <button id="displaytimer">Hide Timer</button>
+                <div id="time"></div>
+                <div class="check"></div>
+            </div>
+        </div>
+        
+        {% if mode=='createpreview' %}
+            <div id="nextbutton2">
+                <a href={{  url_for('scramble.save')  }}><div class="approvebutton"><div class="fakebuttontext">Save Game</div></div></a>
+            </div>
+        {% elif mode=='adminapprove' %}
+            <div id="nextbutton2">
+                <a href={{  url_for('scramble.adminapprove', game_id=game_id)  }}><div class="approvebutton" style="margin-right: 10px;"><div class="fakebuttontext">Approve</div></div></a>
+                <a href={{  url_for('scramble.admindiscard', table="scramble_to_approve", game_id=game_id)  }}><div class="discardbutton" style="margin-left: 10px;"><div class="fakebuttontext">Discard</div></div></a>
+            </div>
+        {% elif mode=='usersubmitted' %}
+            <div id="nextbutton2">
+                <a href={{  url_for('scramble.admindiscard', table="scramble_to_approve", game_id=game_id)  }}><div class="discardbutton" style="margin-left: 10px;"><div class="fakebuttontext">Discard</div></div></a>
+            </div>
+        {% endif %}
+        
+    </div>
+        
+        {% if game_type=='video' %}
+            <div class="player">
+                <!-- <iframe type="text/html" width="640" height="360"
+                src="https://www.youtube-nocookie.com/embed/zE7PKRjrid4?start=0&end=20;autohide=1&controls=0"
+                frameborder="0"></iframe> -->
+            </div>
+        {% endif %}
+
+        <div class="box-container">
+            {% for box in boxes %}
+                <div class="dropbox" data-bindex={{  loop.index0|safe  }}>{{  loop.index|safe  }}</div>
+            {% endfor %}
+        </div>
+        
+
+        <div class="card-container">
+            {% for i in range(cardnum) %}
+                    <div class="card" data-cindex={{  order.get(cards[i])|safe  }} draggable="true">
+                        <div class="content">
+                            {% if game_type=='text' %}
+                                {{  cards[i]  }}
+                            {% elif game_type=='video' %}
+                                {{  letters[i]  }}<br>
+                                <button class="playvid" data-seconds={{  cards[i]|safe  }}>&#9658</button>
+                            {% endif %}
+                        </div>
+                    </div>
+            {% endfor %}
+        </div>
+
+        
+</body>
+
+</html>

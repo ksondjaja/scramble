@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Sequence Reordering Game
+{% endblock title %}
+
+{% block links %}
+    <link rel="stylesheet" type="text/css" media="screen and (min-width: 768px)" href={{ url_for('static', filename='css/scramble/create.css') }}>
+    <link rel="stylesheet" type="text/css" media="screen and (max-width: 767px)" href={{ url_for('static', filename='css/scramble/create_sm.css') }}>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% endblock links %}
+
+{% block scripts %}
+    <script >
+        document.addEventListener('DOMContentLoaded', function(){
+
+            var saved = {{  saved|safe  }};
+
+            if(Object.keys(saved).length >0){
+                document.querySelector('#gametitle').value = '{{  saved.game_title|safe  }}';
+                document.querySelector('#gametype').value = '{{  saved.game_type|safe  }}';
+                if('{{  saved.newcat|safe  }}'=='other'){
+                    document.querySelector('#gamecategory').value = 'Other';
+                    document.querySelector('.other').innerHTML = '<p>If you selected "Other" for Category, please enter a new category: <input type="text" name="new_category" value={{  saved.game_category|safe  }}></p>';
+                }else{
+                    document.querySelector('#gamecategory').value = '{{  saved.game_category|safe  }}';
+                    document.querySelector('.other').innerHTML = '';
+                }
+            }
+
+            document.querySelector('#gamecategory').onchange = function(event){
+                if(event.target.value=="Other"){
+                    // console.log('Other');
+                    document.querySelector('.other').innerHTML = '<p>If you selected "Other" for Category, please enter a new category: <input type="text" name="new_category" placeholder="Enter new category name"></p>';
+                }else{
+                    document.querySelector('.other').innerHTML = '';
+                }
+            }
+
+            document.querySelector('#gametype').onchange = function(event){
+                if(event.target.value=="video"){
+                    document.querySelector('.youtube').innerHTML = 'Please enter a Youtube video link of the video clip that you want to slice into segments.<br>Make sure it follows this format: <i>https://www.youtube.com/<b>watch?v=</b>M7lc1UVf-VE</i><br><input type="text" name="youtubelink" placeholder="Enter a YouTube video URL">';
+                }else{
+                    document.querySelector('.youtube').innerHTML = '';
+                }
+            }
+        })
+    </script>
+{% endblock scripts %}
+        
+
+{% block content %}
+    <div id="top-btn">
+        <a href={{  url_for('scramble.cancelcreate')  }} class="smlbtn"><div class="cancelbuttonsml"><div class="fakebuttonsmltext">Cancel (discard unsaved game info)</div></div></a>
+    </div>
+
+    <div class="main">
+        <h3>To submit a new game to be considered for admin approval, please enter the following information</h3>
+        <form action={{  url_for('scramble.create')  }} method="post">
+            New Game Title/Description: <input type="text" id="gametitle" name="game_title" placeholder="(this is only for administrator's reference)" required><br>
+            <label for="game_type">Select Game Type: </label>
+            <select id="gametype" name="game_type">
+                <option value="text">Text</option>
+                <option value="video">Video</option>
+                <option value="pictures">Pictures</option>
+                <option value="mixed">Mixed (more than 1 of the above)</option>
+            </select><br>
+            <div class="youtube"></div>
+            <label for="game_category">Choose a Category: </label>
+            <select id="gamecategory" name="game_category">
+                {% for cat in allcat %}
+                    <option value={{  cat|safe  }}>{{  cat  }}</option>
+                {% endfor %}
+                <option value="Other">Other</option>
+            </select><br>
+            <div class="other"></div>
+            <div class="message">{{  message  }}</div>
+            <button>Next</button>
+        </form>
+    </div>
+    {{  show  }}<br>
+{% endblock content %}

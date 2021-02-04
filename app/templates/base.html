@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title> {% block title %} {% endblock title %} </title>
+
+
+
+    <!-- ## Base Links ## -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/global.css') }}">
+    <link rel="stylesheet" type="text/css" media="screen and (min-width: 768px)" href="{{  url_for('static', filename='css/menu.css')  }}">
+    <link rel="stylesheet" type="text/css" media="screen and (max-width: 767px)" href="{{  url_for('static', filename='css/menu_sm.css')  }}">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Toastr.js CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
+
+
+    <!-- ## Base Scripts ## -->
+
+    <!-- Root URL -->
+    <script>
+        var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+     
+    </script>
+
+    <!-- Menu Expansion -->
+    {% if request.path in ["/", "/login", "/register"] %}
+        <script src="{{  url_for('static', filename='js/base.js')  }}"></script>
+    {% else %}
+        <script src="{{  url_for('static', filename='js/base_in_app.js')  }}"></script>
+    {% endif %}
+
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- Bootstrap Util.js -->
+    <script src="{{  url_for('static', filename='js/bootstrap/util.js')   }}"></script>
+    
+    
+    <!-- EasyTimer.js-->
+    <script src="{{  url_for('static', filename='js/easytimer/easytimer.js')   }}"></script>
+
+    <!-- Toastr.js-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+  
+     <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/364d98b2a3.js" crossorigin="anonymous"></script>
+   
+    
+    {% block links %}
+        
+    {% endblock links %}    
+
+    {% block scripts %}
+        
+    {% endblock scripts %}
+
+</head>
+
+
+<body>
+
+    <header>
+
+        <div id="menu-expand">
+            <label for="toggle-sm" id="hamburger">&#9776;</label>
+            <input type="checkbox" id="toggle-sm"/>
+
+            <label for="toggle-show" id="chevron-right"><i class="fas fa-chevron-right"></i> Show Menu</label>
+            <input type="checkbox" id="toggle-show" checked/>
+        </div>
+        
+        <div id="header-profile">
+            {% if current_user.is_authenticated %}
+                <i class="far fa-user-circle pr-1"></i> {{current_user.first_name }} {{current_user.last_name}}
+            {% else %}
+            <i class="far fa-user-circle pr-1"></i> Guest
+            {% endif %}
+            
+        </div>
+
+    </header>
+
+    
+    <div class="flex">
+
+        <div id="sidebar-ghost">
+        </div>
+
+        
+        <div class="container">
+
+            {% block content %}
+            
+            {% endblock content %}
+            
+        </div>
+
+    </div>
+    
+
+    <div id="sidebar">
+
+        <div class="sidebar-hide">
+            <label for="toggle-hide" id="chevron-left"><i class="fas fa-chevron-left"></i> Hide Menu</label>
+            <input type="checkbox" id="toggle-hide"/>
+        </div>
+        
+            <div id="sidebar-title">
+           
+            
+                <h2> Project Italia</h2>
+
+        
+            </div>
+    
+        
+       
+        <div class="sidebar-section">
+
+            <h2>
+              Exam
+            </h2>
+
+            <ul>
+                <li><a href="{{url_for('exam.index')}}"><i class="far fa-copy"></i> Take an Exam</a></li>
+                
+            </ul>
+    
+        </div>
+        
+        <div class="sidebar-section">
+
+            <h2>
+                Activities
+            </h2>
+
+            <ul>
+                <!-- <li><a href="#"> <i class="far fa-file-video"></i> Video Scramble   </a></li> -->
+                <li><a href="{{url_for('scramble.index')}}"> <i class="fas fa-exchange-alt"></i> Scramble Game      </a></li>
+                <li><a href="#"> <i class="far fa-flag"></i> Italy Match-Up         </a></li>
+                <li><a href="#"> <i class="fas fa-brain"></i> Memory Game           </a></li>
+                <li><a href="{{url_for('mcq.index')}}">  <i class="fas fa-list-ul"></i> Multiple Choice </a></li>
+                
+            </ul>
+    
+        </div>
+
+        
+
+        <div class="sidebar-section">
+
+            <h2>
+                Account
+            </h2>
+
+            <ul>
+
+                {% if current_user.is_authenticated %}
+                        
+                    <li><a href="#"> <i class="far fa-user-circle"></i> Your Account</a></li>
+                    <li><a href="{{url_for('auth.logout')}}"> <i class="fas fa-level-down-alt"></i> Log Out</a></li>
+                    
+                {% else %}
+
+                <li><a href="{{url_for('auth.login')}}"> <i class="fas fa-level-up-alt"></i> Log In</a></li>
+                <li><a href="{{url_for('auth.register')}}"> <i class="fas fa-user-plus"></i> Register</a></li>
+                
+                
+                {% endif %}
+    
+            </ul>
+    
+        </div>
+
+    </div> 
+
+
+</body>
+
+
+</html>

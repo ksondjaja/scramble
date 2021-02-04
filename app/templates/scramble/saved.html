@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Sequence Reordering Game
+{% endblock title %}
+
+{% block links %}
+    <link rel="stylesheet" type="text/css" media="screen and (min-width: 768px)" href={{ url_for('static', filename='css/scramble/create.css') }}>
+    <link rel="stylesheet" type="text/css" media="screen and (max-width: 767px)" href={{ url_for('static', filename='css/scramble/create_sm.css') }}>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% endblock links %}
+
+{% block content %}
+    <div class="main">
+        <h1>Thank you for your submission!</h1>
+        <h4>Your game will be reviewed by the administrator, and will be playable by all users upon approval.</h4>
+        <br><br>
+        <a href={{  url_for('scramble.index')  }} class="smlbtn"><div class="fakebuttonsml"><div class="fakebuttonsmltext">Scramble Home</div></div></a>
+    </div>
+{% endblock content %}

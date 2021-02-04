@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Sequence Reordering Game
+{% endblock title %}
+
+{% block links %}
+    <link rel="stylesheet" type="text/css" media="screen and (min-width: 768px)" href={{ url_for('static', filename='css/scramble/create.css') }}>
+    <link rel="stylesheet" type="text/css" media="screen and (max-width: 767px)" href={{ url_for('static', filename='css/scramble/create_sm.css') }}>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% endblock links %}
+
+{% block content %}
+    <div class="main">
+        <h1><a href={{  url_for('scramble.choosegames')  }}>Play Games</a></h1>
+        <h1><a href={{  url_for('scramble.gameinfo')  }}>Create a New Game</a></h1>
+        <h1><a href={{  url_for('scramble.seetimes', game_type='text')  }}>See High Scores</a></h1>
+        <br>
+        <br>
+        <h4><a href={{  url_for('scramble.seemytimes', game_type='text')  }}>My Scores</a></h4>
+        {% if current_user.is_admin==1 %}
+            <br><br>
+            <h2>Admin's Manage Section</h2>
+            <div id="adminmanage">
+                <h4><a href={{  url_for('scramble.managegames')  }}>Game Database</a></h4>
+                <h4><a href={{  url_for('scramble.managescores', game_type='text')  }}>Score Database</a></h4>
+            </div>
+        {% else %}
+            <h4><a href={{  url_for('scramble.managegames')  }}>My Submitted Games</a></h4>
+        {% endif %}
+    </div>
+{% endblock content %}

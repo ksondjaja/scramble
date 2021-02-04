@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Sequence Reordering Game
+{% endblock title %}
+
+{% block links %}
+    <link rel="stylesheet" type="text/css" media="screen and (min-width: 768px)" href={{ url_for('static', filename='css/scramble/showgames.css') }}>
+    <link rel="stylesheet" type="text/css" media="screen and (max-width: 767px)" href={{ url_for('static', filename='css/scramble/showgames_sm.css') }}>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% endblock links %}
+
+{% block content %}
+<div id="top-btn">
+    <a href={{  url_for('scramble.index')  }} class="smlbtn"><div class="fakebuttonsml"><div class="fakebuttonsmltext">Scramble Home</div></div></a>
+</div>
+
+<div class="main">
+    {{  message  }}
+    <form action={{  url_for('scramble.playgame')  }} method="post">
+        <div class="switchradio">
+            <div class="section">
+                <h3>Choose Game Type</h3>
+                <input type="radio" id="text" name="played_game_type" value="text" checked/>
+                <label for="text">Text</label>
+
+                <input type="radio" id="video" name="played_game_type" value="video" />
+                <label for="video">Video</label>
+
+                <input type="radio" id="pictures" name="played_game_type" value="pictures" />
+                <label for="pictures">Pictures</label>
+
+                <input type="radio" id="mixed" name="played_game_type" value="mixed" />
+                <label for="mixed">Mixed</label>
+                
+                <br><br>
+
+                <h3>Choose Game Difficulty</h3>
+                <input type="radio" id="easy" name="game_difficulty" value="easy" checked/>
+                <label for="easy">Easy (5-7 cards)</label>
+
+                <input type="radio" id="medium" name="game_difficulty" value="medium"/>
+                <label for="medium">Medium (8-10 cards)</label>
+
+                <input type="radio" id="difficult" name="game_difficulty" value="difficult"/>
+                <label for="difficult">Difficult (11-15 cards)</label>
+            </div>
+        </div>
+        <button>Play</button>
+    </form>
+</div>
+{% endblock content %}

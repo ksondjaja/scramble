@@ -1,0 +1,39 @@
+body{
+    font-family: Helvetica, sans-serif;
+    font-size: 14px;
+}
+.timeinput{
+    margin-left: 40px;
+    margin-top: 40px;
+}
+#segmentnumber{
+    margin-bottom: 20px;
+}
+#player{
+    margin-top: 60px;
+    margin-left: 30px;
+}
+.hide-top{
+    background: white;
+    height: 50px;
+    width: 320px;
+    position: absolute;
+    top: 0;
+    left: 20px;
+    z-index: 90;
+}
+.hide-bottom{
+    background: white;
+    height: 50px;
+    width: 320px;
+    position: absolute;
+    top: 235px;
+    left: 20px;
+    z-index: 89;
+}
+#gameplayer{
+    position: absolute;
+    top: 0;
+    left: 20px;
+    z-index: 0;
+}

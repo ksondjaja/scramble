@@ -1,0 +1,225 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Sequence Reordering Game
+{% endblock title %}
+
+{% block links %}
+    <link rel="stylesheet" type="text/css" media="screen and (min-width: 768px)" href={{ url_for('static', filename='css/scramble/showgames.css') }}>
+    <link rel="stylesheet" type="text/css" media="screen and (max-width: 767px)" href={{ url_for('static', filename='css/scramble/showgames_sm.css') }}>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% endblock links %}
+
+{% block scripts %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function(){
+            const dividers = document.querySelectorAll('.divider');
+            const tablediv = document.querySelectorAll('#tablediv');
+            var div1 = true;
+            var div2 = false;
+            var div3 = false;
+
+            dividers[0].style.background = '#DED7FA';
+            tablediv[0].style.display = 'table';
+            tablediv[1].style.display = 'none';
+            tablediv[2].style.display = 'none';
+
+            dividers[0].onclick = function(){
+                dividers[0].style.background = '#DED7FA';
+                dividers[1].style.background = '#F1EEFD';
+                dividers[2].style.background = '#F1EEFD';
+                tablediv[0].style.display = 'table';
+                tablediv[1].style.display = 'none';
+                tablediv[2].style.display = 'none';
+                div1 = true;
+                div2 = false;
+                div3 = false;
+            }
+
+            dividers[1].onclick = function(){
+                dividers[0].style.background = '#F1EEFD';
+                dividers[1].style.background = '#DED7FA';
+                dividers[2].style.background = '#F1EEFD';
+                tablediv[0].style.display = 'none';
+                tablediv[1].style.display = 'table';
+                tablediv[2].style.display = 'none';
+                div1 = false;
+                div2 = true;
+                div3 = false;
+            }
+
+            dividers[2].onclick = function(){
+                dividers[0].style.background = '#F1EEFD';
+                dividers[1].style.background = '#F1EEFD';
+                dividers[2].style.background = '#DED7FA';
+                tablediv[0].style.display = 'none';
+                tablediv[1].style.display = 'none';
+                tablediv[2].style.display = 'table';
+                div1 = false;
+                div2 = false;
+                div3 = true;
+                // document.querySelector('.main').style.height = '110%';
+                // document.querySelector('.main').style.overflowY = 'auto';
+            }
+
+            dividers.forEach(function(divider){
+                divider.onmouseover = function(){
+                    divider.style.background =  '#DED7FA';
+                }
+                divider.onmouseout = function(){
+                    if(div1==false){
+                        dividers[0].style.background = '#F1EEFD';
+                    }
+                    if(div2==false){
+                        dividers[1].style.background = '#F1EEFD';
+                    }
+                    if(div3==false){
+                        dividers[2].style.background = '#F1EEFD';
+                    }
+                }
+            })
+        })
+    </script>
+
+{% endblock scripts %}
+
+{% block content %}
+    
+    <div id="top-btn">
+        <a href={{  url_for('scramble.index')  }} class="smlbtn"><div class="fakebuttonsml"><div class="fakebuttonsmltext">Home</div></div></a>
+    </div>
+    
+    <div class="main">
+        <h2>{{  score_title  }}</h2>
+        <div>
+            <a href={{  url_for('scramble.seetimes', game_type='text')  }} class="smlbtn"><div class="fakebuttonsml" style="margin-right: 10px;"><div class="fakebuttonsmltext">Text High Scores</div></div></a>
+            <a href={{  url_for('scramble.seetimes', game_type='video')  }} class="smlbtn"><div class="fakebuttonsml"><div class="fakebuttonsmltext">Video High Scores</div></div></a>
+        </div>
+        
+        <br><br>
+        <h3>{{  game_type|capitalize  }} Games</h3><br>
+
+        <div class="databases">
+            <div class="divider">Easy Game Scores</div>
+            <div class="divider">Medium Game Scores</div>
+            <div class="divider">Difficult Game Scores</div>
+        </div>
+        <div id="tablediv">
+            <table>
+                <th>Ranking</th>
+                {% if score_title != "Your Game Scores" %}
+                    <th>Player</th>
+                {% endif %}
+                {% if score_title == "Manage Scores" and current_user.is_admin==1 %}
+                    <th>User ID</th>
+                {% endif %}
+                <th>Difficulty</th>
+                <th>Game Type</th>
+                <th>Game ID</th>
+                <th>Completed in</th>
+                <th>Played</th>
+                {% if score_title == "Manage Scores" and current_user.is_admin==1 %}
+                    <th>Discard</th>
+                {% endif %}
+
+                {% for score in easy %}
+                    <tr>
+                        <td>{{  score.ranking  }}</td>
+                        {% if score_title != "Your Game Scores" %}
+                            <td>{{  score.first_name  }}</td>
+                        {% endif %}
+                        {% if score_title == "Manage Scores" and current_user.is_admin==1 %}
+                            <td>{{  score.user_id  }}</td>
+                        {% endif %}
+                        <td>{{  score.game_difficulty  }}</td>
+                        <td>{{  score.game_type  }}</td>
+                        <td>{{  score.game_id  }}</td>
+                        <td>{{  score.game_time_sec  }}</td>
+                        <td>{{  score.submit_time  }}</td>
+                        {% if score_title == "Manage Scores" and current_user.is_admin==1 %}
+                            <td><a href={{  url_for('scramble.scorediscard', score_id=score.score_id)  }}><div class="discard">&#x2718</div></a></td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <div id="tablediv">
+            <table>
+                <th>Ranking</th>
+                {% if score_title != "Your Game Scores" %}
+                    <th>Player</th>
+                {% endif %}
+                {% if score_title == "Manage Scores" and current_user.is_admin==1 %}
+                    <th>User ID</th>
+                {% endif %}
+                <th>Difficulty</th>
+                <th>Game Type</th>
+                <th>Game ID</th>
+                <th>Completed in</th>
+                <th>Played</th>
+                {% if score_title == "Manage Scores" and current_user.is_admin==1 %}
+                    <th>Discard</th>
+                {% endif %}
+
+                {% for score in medium %}
+                    <tr>
+                        <td>{{  score.ranking  }}</td>
+                        {% if score_title != "Your Game Scores" %}
+                            <td>{{  score.first_name  }}</td>
+                        {% endif %}
+                        {% if score_title == "Manage Scores" and current_user.is_admin==1 %}
+                            <td>{{  score.user_id  }}</td>
+                        {% endif %}
+                        <td>{{  score.game_difficulty  }}</td>
+                        <td>{{  score.game_type  }}</td>
+                        <td>{{  score.game_id  }}</td>
+                        <td>{{  score.game_time_sec  }}</td>
+                        <td>{{  score.submit_time  }}</td>
+                        {% if score_title == "Manage Scores" and current_user.is_admin==1 %}
+                            <td><a href={{  url_for('scramble.scorediscard', score_id=score.score_id)  }}><div class="discard">&#x2718</div></a></td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <div id="tablediv">
+            <table>
+                <th>Ranking</th>
+                {% if score_title != "Your Game Scores" %}
+                    <th>Player</th>
+                {% endif %}
+                {% if score_title == "Manage Scores" and current_user.is_admin==1 %}
+                    <th>User ID</th>
+                {% endif %}
+                <th>Difficulty</th>
+                <th>Game Type</th>
+                <th>Game ID</th>
+                <th>Completed in</th>
+                <th>Played</th>
+                {% if score_title == "Manage Scores" and current_user.is_admin==1 %}
+                    <th>Discard</th>
+                {% endif %}
+
+                {% for score in difficult %}
+                    <tr>
+                        <td>{{  score.ranking  }}</td>
+                        {% if score_title != "Your Game Scores" %}
+                            <td>{{  score.first_name  }}</td>
+                        {% endif %}
+                        {% if score_title == "Manage Scores" and current_user.is_admin==1 %}
+                            <td>{{  score.user_id  }}</td>
+                        {% endif %}
+                        <td>{{  score.game_difficulty  }}</td>
+                        <td>{{  score.game_type  }}</td>
+                        <td>{{  score.game_id  }}</td>
+                        <td>{{  score.game_time_sec  }}</td>
+                        <td>{{  score.submit_time  }}</td>
+                        {% if score_title == "Manage Scores" and current_user.is_admin==1 %}
+                            <td><a href={{  url_for('scramble.scorediscard', score_id=score.score_id)  }}><div class="discard">&#x2718</div></a></td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+{% endblock content %}

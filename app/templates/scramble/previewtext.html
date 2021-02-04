@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Create a New Game
+{% endblock title %}
+
+{% block links %}
+    <link rel="stylesheet" type="text/css" media="screen and (min-width: 768px)" href={{ url_for('static', filename='css/scramble/create.css') }}>
+    <link rel="stylesheet" type="text/css" media="screen and (max-width: 767px)" href={{ url_for('static', filename='css/scramble/create_sm.css') }}>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% endblock links %}   
+
+{% block content %}
+    <div id="top-btn">
+        <a href={{  url_for('scramble.create')  }} class="smlbtn"><div class="fakebuttonsml"><div class="fakebuttonsmltext">Back</div></div></a>
+    </div>
+    <div class="main">
+        <div class="tablecontainer">
+            {% for key, value in game_content.items() %}
+            <div class="preview">
+                    <b>{{  value  }}</b><br>
+                    <hr />
+                    Card no. {{  loop.index}}
+            </div>
+            {% endfor %}
+        </div>
+        <br><br>
+        <a href={{  url_for('scramble.textgame')  }} class="smlbtn"><div class="fakebuttonsml"><div class="fakebuttonsmltext">Preview Game</div></div></a>
+    </div>
+{% endblock content %}

@@ -1,0 +1,228 @@
+html{
+    font-family: sans-serif;
+}    
+body {
+    overscroll-behavior-x: none;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+a{
+    text-decoration: none;
+}
+.head{
+    display: flex;
+    border-bottom: 2px solid black;
+}
+.title{
+    display: inline-block;
+    position: relative;
+    margin-left: min(3vw, 50px);
+    margin-top: 7px;
+    margin-right: 10px;
+    font-size: min(2.5vw,28px);
+    text-align: left;
+    font-weight: bold;
+    color:black;
+}
+.dropbox{
+    position: absolute;
+    display: block;
+    max-width: 220px;
+    min-width: 80px;
+    min-height: 60px;
+    margin-left: -3px;
+    margin-right: -3px;
+    border: 3px solid black;
+}
+.card {
+    position: absolute;
+    display: block;
+    max-width: 200px;
+    min-width: 60px;
+    min-height: 50px;
+    overflow: hidden;
+    background: mediumpurple;
+    color: white;
+    border-radius: 6px;
+    transition: 0.1s;
+}
+.card >* {
+    pointer-events: none;
+}
+.content{
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    text-align: center;
+    font-size: 14px;
+    padding: 7px;
+}
+#user{
+    width: 95vw;
+    position: relative;
+    margin-top: 10px;
+    text-align: right;
+    font-size: 14px;
+    font-weight: bold;
+    color: black;
+}
+#timer{
+    position: fixed;
+    display: inline-block;
+    text-align: left;
+    height: 100%;
+    vertical-align: middle;
+    margin-top: 10px;
+}
+#time{
+    position: fixed;
+    display: inline-block;
+    margin-left: min(15vw, 100px);
+    font-size: min(2.5vw, 20px);
+    font-weight: bold;
+    color: #29bea3;
+}
+#displaytimer{
+    position: fixed;
+    display: inline-block;
+    font-size: 14px;
+    max-width: 100px;
+    max-height: 30px;
+    background: #29bea3;
+    color: white;
+    border: 2px solid #29bea3;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+#displaytimer:hover{
+    background: #27aa92;
+    color: white;
+    border: 2px solid #27aa92;
+}
+#displaytimer:focus{
+    outline: none;
+}
+.check{
+    position: fixed;
+    display: inline-block;
+    margin-left: max(20vw, 240px);
+    font-size: min(2.5vw, 20px);
+    font-weight: bold;
+    color: #d8205f;
+}
+.fakebutton{
+    display: inline-block;
+    position: relative;
+    margin: 20px;
+    margin-top: 25px;
+    margin-bottom: 0;
+    background: #29bea3;
+    color:  white;
+    border: 2px solid  #29bea3;
+    border-radius: 5px;
+    padding: 5px;
+}
+.fakebutton:hover{
+    background: #27aa92;
+    color: white;
+    border: 2px solid #27aa92;
+    cursor: pointer;
+    text-decoration: none;
+}
+.fakebutton:active{
+    background: #27aa92;
+    color: white;
+    border: 2px solid #27aa92;
+}
+#backbutton{
+    display: inline-block;
+    margin-top: 25px;
+    margin-bottom: 0;
+    margin-left: 20px;
+}
+#nextbutton{
+    display: inline-block;
+    margin-top: 25px;
+    margin-bottom: 0;
+    margin-left: 20px;
+}
+#nextbutton2{
+    display: inline-block;
+    margin-top: 25px;
+    margin-bottom: 0;
+    margin-left: 20px;
+}
+.submittimebutton{
+    display: inline-block;
+    position: relative;
+    background: #29bea3;
+    color:  white;
+    border: 2px solid  #29bea3;
+    border-radius: 5px;
+    height: 60px;
+    width: 100px;
+}
+.submittimebutton:hover{
+    background: #27aa92;
+    color: white;
+    border: 2px solid #27aa92;
+    cursor: pointer;
+}
+.approvebutton{
+    display: inline-block;
+    position: relative;
+    color: white;
+    background: #5fb34c;
+    border: 2px solid #5fb34c;
+    border-radius: 5px;
+    padding: 5px;
+}
+.approvebutton:hover{
+    background: #47a034;
+    color: white;
+    border: 2px solid #47a034;
+    cursor: pointer;
+}
+.discardbutton{
+    display: inline-block;
+    position: relative;
+    color: white;
+    background: #d65b86;
+    border: 2px solid #d65b86;
+    border-radius: 5px;
+    font-size: 18px;
+    padding: 5px;
+}
+.discardbutton:hover{
+    background: #d8205f;
+    color: white;
+    border: 2px solid #d8205f;
+    cursor: pointer;
+}
+.fakebuttontext{
+    font-size: 18px;
+    text-decoration: none;
+    position: inline-block;
+    text-align: center;
+}
+.playvid{
+    /* -webkit-transform: translateX(-50%);
+    transform: translateX(-50%); */
+    font-size: 50px;
+    color: cadetblue;
+    border: 3px solid cadetblue;
+    border-radius: 6px;
+    width: 60%;
+    margin-top: 10px;
+    margin-bottom:20px;
+    background: lightsalmon;
+}
+.playvid:focus{
+    outline: none;
+}
+.player{
+    position: inline-block;
+    left: 54vw;
+    top: 70px;
+}

@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Sequence Reordering Game
+{% endblock title %}
+
+{% block links %}
+    <link rel="stylesheet" type="text/css" media="screen and (min-width: 768px)" href={{ url_for('static', filename='css/scramble/create.css') }}>
+    <link rel="stylesheet" type="text/css" media="screen and (max-width: 767px)" href={{ url_for('static', filename='css/scramble/create_sm.css') }}>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% endblock links %}
+
+{% block scripts %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function(){
+
+            var accordions = document.querySelectorAll('.accordion');
+            var previous;
+
+            var gameinput = '{{  game_input|safe  }}';
+            var gamevalues = {{  game_content|tojson  }};
+            var n = Object.keys(gamevalues).length;          
+
+            if(gameinput.length >0){
+                document.querySelector('#segmentnumber').value = `${n}`;
+
+                if(gameinput=='multifields'){    
+                    document.querySelector('#inputform').style.display = "block";
+                    var x = "";    
+                    for(var i=0; i<n; i++){
+                        x = x + `Card number ${i+1}: <input name='${i}' type="text" value=${gamevalues[i]} placeholder="Enter text" required><br>`;
+                    }
+                    document.querySelector('#inputfields').innerHTML = x;
+                }else if(gameinput=='paragraph'){
+                    var x="";
+                    for(var i=0; i<n; i++){
+                        x = x + gamevalues[i];
+                    }
+                    document.querySelector('#inputparagraph').innerHTML = x;
+                }
+            }else{
+                document.querySelector('#inputform').style.display = "block"
+                var y = "";
+                for(var i=0; i<5; i++){
+                    y = y + `Card number ${i+1}: <input name='${i}' type="text" placeholder="Enter text" required><br>`;
+                }
+                document.querySelector('#inputfields').innerHTML = y;
+            }
+
+            for (var i = 0; i < accordions.length; i++) {
+                accordions[i].onclick = function() {
+                    if(previous){
+                        previous.classList.toggle("active",false);
+                        previous.nextElementSibling.classList.toggle("show",false);
+                        previous.nextElementSibling.style.display = "none";
+                        previous.style.background = "#29bea3";
+                    }
+                    this.classList.toggle("active");
+                    this.nextElementSibling.classList.toggle("show");
+                    this.nextElementSibling.style.display = "block";
+                    this.style.background = "#229983";
+                    
+                    // document.querySelector('.main').style.height = '110%';
+                    // document.querySelector('.main').style.overflowY = 'auto';
+
+                    previous=this;
+                }
+            }
+
+            document.querySelector('#segmentnumber').onchange = function(){
+                var numfields = document.querySelector('#segmentnumber').value;
+            
+                document.querySelector('#inputform').style.display = "block";
+            
+                var x = "";
+                var i;
+                for(i=0; i<numfields; i++){
+                    if(gameinput=='multifields' && i<n){
+                        x = x + `Card number ${i+1}: <input name='${i}' type="text" value=${gamevalues[i]} placeholder="Enter text" required><br>`;
+                    }else{
+                        x = x + `Card number ${i+1}: <input name='${i}' type="text" placeholder="Enter text" required><br>`;
+                    }
+                }
+                document.querySelector('#inputfields').innerHTML = x;
+
+                // if(numfields<7){
+                //     document.querySelector('.main').style.height = ((numfields-5)*12+100) + '%';
+                // }else if (numfields<10){
+                //     document.querySelector('.main').style.height = ((numfields-5)*8+100) + '%';
+                // }else if(numfields<13){
+                //     document.querySelector('.main').style.height = ((numfields-5)*6+100) + '%';
+                // }else{
+                //     document.querySelector('.main').style.height = ((numfields-5)*5+100) + '%';
+                // }
+                // document.querySelector('.main').style.overflowY = 'auto';
+            }
+        })
+    </script>
+{% endblock scripts %}
+
+{% block content %}
+    <div id="top-btn">
+        <a href={{  url_for('scramble.gameinfo')  }} class="smlbtn"><div class="fakebuttonsml"><div class="fakebuttonsmltext">Back</div></div></a>
+        <a href={{  url_for('scramble.cancelcreate')  }} class="smlbtn"><div class="cancelbuttonsml"><div class="fakebuttonsmltext">Cancel (discard unsaved game info)</div></div></a><br>
+    </div>
+
+    <div class="main">
+        <p>{{  message  }}</p>
+        <h3>Select how you want to enter text into cards:</h3>
+        <button class="accordion">Provide a paragraph containing 5 to 15 sentences, and the sentences will be automatically separated into different cards.</button>
+        <div class="textinputoption">
+            <form action={{  url_for('scramble.createtext2b')  }} method="post">
+                Enter text with multiple sentences, separated by periods, exclamation mark, or question mark:<br>
+                <textarea id="inputparagraph" name="inputparagraph" rows="10" cols="100" required>Enter text</textarea><br>
+                <button>Submit</button>
+            </form>
+        </div>
+
+        <button class="accordion">Manually enter each word, phrase, or sentence into a cards.</button>
+        <div class="textinputoption">
+            <label for="segmentnumber">Select number of cards to shuffle:</label>
+            <select id="segmentnumber" name="segmentnumber">
+                <option value="5">5 cards</option>
+                <option value="6">6 cards</option>
+                <option value="7">7 cards</option>
+                <option value="8">8 cards</option>
+                <option value="9">9 cards</option>
+                <option value="10">10 cards</option>
+                <option value="11">11 cards</option>
+                <option value="12">12 cards</option>
+                <option value="13">13 cards</option>
+                <option value="14">14 cards</option>
+                <option value="15">15 cards</option>
+            </select>
+            <div id="inputform">
+                <form action = {{  url_for('scramble.createtext2a')  }} method="post">
+                    <div id="inputfields"></div>
+                    <button>Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
