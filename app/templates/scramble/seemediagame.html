@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Sequence Reordering Game
+{% endblock title %}
+
+{% block links %}
+    <link rel="stylesheet" type="text/css" media="screen and (min-width: 768px)" href={{ url_for('static', filename='css/scramble/showgames.css') }}>
+    <link rel="stylesheet" type="text/css" media="screen and (max-width: 767px)" href={{ url_for('static', filename='css/scramble/showgames_sm.css') }}>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% if game_type=='video' %}
+        <link href="https://vjs.zencdn.net/7.10.2/video-js.css" rel="stylesheet" />
+    {% endif %}
+{% endblock links %}
+
+{% block scripts %}
+    <script src={{ url_for('static', filename='js/scramble/previewmedia.js') }}></script>
+{% endblock scripts %}
+
+{% block content %}
+
+    <div id="top-btn">
+        <a href={{  url_for('scramble.index')  }} class="smlbtn"><div class="cancelbuttonsml"><div class="fakebuttonsmltext">Quit Game</div></div></a>
+    </div>
+
+    <div class="main">
+        <p>{{  instruction  }} and click Play when you are ready.</p>
+        <br>
+        <div id="fullmediapreview">
+            {% if played_game_type=='video' %}
+                <video id="player" class="video-js" preload="auto" width="640" height="360" data-setup="{}">
+                    <source src={{ url_for('static', filename=media_path|safe) }} type={{  media_format|safe  }}>
+                </video>
+            {% elif played_game_type=='audio' %}
+                <audio id="player" style="display: none;">
+                    <source src={{ url_for('static', filename=media_path|safe) }} type={{  media_format|safe  }}>
+                </audio>
+            {% endif %}
+            <div class = "clip">
+                <button class="play" data-seconds="{{  full_media|safe  }}">&#9658 Play Full {{  played_game_type|capitalize  }}</button>
+            </div>
+        </div>
+        <br><br>
+        <a href={{  url_for('scramble.mediagame')  }} class="smlbtn"><div class="fakebuttonsml"><div class="fakebuttonsmltext">Play</div></div></a>
+    </div>
+    
+{% endblock content %}

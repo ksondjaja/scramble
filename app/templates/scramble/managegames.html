@@ -59,7 +59,7 @@
 
 {% block content %}
     <div id="top-btn">
-        <a href={{  url_for('scramble.index')  }} class="smlbtn"><div class="fakebuttonsml"><div class="fakebuttonsmltext">Home</div></div></a>
+        <a href={{  url_for('scramble.index')  }} class="smlbtn"><div class="fakebuttonsml"><div class="fakebuttonsmltext">Scramble Home</div></div></a>
     </div>
 
     <div class="main">
@@ -86,9 +86,9 @@
                 {% for game in to_approve %}
                     <tr>
                         {% if current_user.is_admin==1 %}
-                            <td><a href={{  url_for('scramble.adminpreview', table='scramble_to_approve', game_id=game.game_id)  }}><div class="previewgame">&#9658</div></a></td>
+                            <td><a href={{  url_for('scramble.adminpreview', table=0, game_id=game.game_id)  }}><div class="previewgame">&#9658</div></a></td>
                         {% else %}
-                            <td><a href={{  url_for('scramble.userpreview', table='scramble_to_approve', game_id=game.game_id)  }}><div class="previewgame">&#9658</div></a></td>
+                            <td><a href={{  url_for('scramble.userpreview', table=0, game_id=game.game_id)  }}><div class="previewgame">&#9658</div></a></td>
                         {% endif %}
                         <td>{{  game.game_id  }}</td>
                         <td>{{  game.game_type  }}</td>
@@ -101,7 +101,7 @@
                             <td>{{  game.user_email  }}</td>
                             <td><a href={{  url_for('scramble.adminapprove', game_id=game.game_id)  }}><div class="approve">&#x2714</div></a></td>
                         {% endif %}
-                        <td><a href={{  url_for('scramble.admindiscard', table="scramble_to_approve", game_id=game.game_id)  }}><div class="discard">&#x2718</div></a></td>
+                        <td><a href={{  url_for('scramble.admindiscard', table=0, game_id=game.game_id)  }}><div class="discard">&#x2718</div></a></td>
                     </tr>
                 {% endfor %}
             </table>
@@ -124,9 +124,9 @@
                 {% for game in approved %}
                     <tr>
                         {% if current_user.is_admin==1 %}
-                            <td><a href={{  url_for('scramble.adminpreview', table='scramble_approved', game_id=game.game_id)  }}><div class="previewgame">&#9658</div></a></td>
+                            <td><a href={{  url_for('scramble.adminpreview', table=1, game_id=game.game_id)  }}><div class="previewgame">&#9658</div></a></td>
                         {% else %}
-                            <td><a href={{  url_for('scramble.userpreview', table='scramble_approved', game_id=game.game_id)  }}><div class="previewgame">&#9658</div></a></td>
+                            <td><a href={{  url_for('scramble.userpreview', table=1, game_id=game.game_id)  }}><div class="previewgame">&#9658</div></a></td>
                         {% endif %}
                         <td>{{  game.game_id  }}</td>
                         <td>{{  game.game_type  }}</td>
@@ -138,7 +138,7 @@
                             <td>{{  game.approved_time  }}</td>
                             <td>{{  game.first_name  }}</td>
                             <td>{{  game.user_email  }}</td>
-                            <td><a href={{  url_for('scramble.admindiscard', table='scramble_approved', game_id=game.game_id)  }}><div class="discard">&#x2718</div></a></td>
+                            <td><a href={{  url_for('scramble.admindiscard', table=1, game_id=game.game_id)  }}><div class="discard">&#x2718</div></a></td>
                         {% endif %}
                     </tr>
                 {% endfor %}

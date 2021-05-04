@@ -102,6 +102,7 @@ form button:active{
     background: #DED7FA;
     display: block;
     padding: 20px;
+    margin-bottom: 40px;
 }
 .previewgame{
     font-size: 16px;
@@ -211,4 +212,33 @@ form button:active{
     font-size: 14px;
     text-decoration: none;
     text-align: center;
+}
+#player{
+    width: 640px;
+    height: 360px;
+}
+.clip{
+    display: inline-block;
+    margin-left: 20px;
+    padding-top: 15px;
+    padding-right: 5px;
+    padding-left: 5px;
+}
+.play{
+    font-size: 14px;
+    min-height: 30px;
+    min-width: 30px;
+    background: mediumpurple;
+    color: white;
+    border: 2px solid mediumpurple;
+    border-radius: 5px;
+}
+.play:hover{
+    background: rebeccapurple;
+    color: white;
+    border: 2px solid rebeccapurple;
+    cursor: pointer;
+}
+.play:focus{
+    outline: none;
 }

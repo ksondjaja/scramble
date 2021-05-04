@@ -2,6 +2,7 @@ html{
     font-family: sans-serif;
 }    
 body {
+    min-height: 96vh;
     overscroll-behavior-x: none;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
@@ -68,7 +69,7 @@ a{
     color: black;
 }
 #timer{
-    position: fixed;
+    position: relative;
     display: inline-block;
     text-align: left;
     height: 100%;
@@ -76,15 +77,15 @@ a{
     margin-top: 10px;
 }
 #time{
-    position: fixed;
+    position: relative;
     display: inline-block;
-    margin-left: min(15vw, 100px);
+    margin-left: 20px;
     font-size: min(2.5vw, 20px);
     font-weight: bold;
     color: #29bea3;
 }
 #displaytimer{
-    position: fixed;
+    position: relative;
     display: inline-block;
     font-size: 14px;
     max-width: 100px;
@@ -104,9 +105,9 @@ a{
     outline: none;
 }
 .check{
-    position: fixed;
+    position: relative;
     display: inline-block;
-    margin-left: max(20vw, 240px);
+    margin-left: 20px;
     font-size: min(2.5vw, 20px);
     font-weight: bold;
     color: #d8205f;
@@ -206,23 +207,45 @@ a{
     position: inline-block;
     text-align: center;
 }
-.playvid{
+#play{
     /* -webkit-transform: translateX(-50%);
     transform: translateX(-50%); */
-    font-size: 50px;
-    color: cadetblue;
-    border: 3px solid cadetblue;
+    pointer-events: auto;
+    font-size: 18px;
+    color: white;
+    border: 3px solid white;
     border-radius: 6px;
-    width: 60%;
-    margin-top: 10px;
-    margin-bottom:20px;
-    background: lightsalmon;
+    margin: 25px;
+    margin-top: 15px;
+    margin-bottom: 7px;
+    background: mediumpurple;
 }
-.playvid:focus{
+#play:hover{
+    /* -webkit-transform: translateX(-50%);
+    transform: translateX(-50%); */
+    background: rebeccapurple;
+}
+#play:focus{
     outline: none;
 }
+#playall{
+    /* -webkit-transform: translateX(-50%);
+    transform: translateX(-50%); */
+    font-size: 18px;
+    color: white;
+    border: 3px solid white;
+    border-radius: 6px;
+    padding: 5px;
+    margin-top: 10px;
+    margin-bottom:20px;
+    background: mediumpurple;
+}
 .player{
-    position: inline-block;
-    left: 54vw;
-    top: 70px;
+    position: absolute;
+    display: block;
+    left: 25vw;
+}
+#player{
+    width: 640px;
+    height: 320px;
 }

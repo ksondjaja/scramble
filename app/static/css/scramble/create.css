@@ -80,6 +80,13 @@ button:active{
 #inputform{
     display: none;
 }
+#inputfields input{
+    margin-right: 30px;
+    margin-left: 5px;
+}
+.timerow{
+    display: inline-block;
+}
 .other{
     padding-left: 20px;
 }
@@ -160,4 +167,52 @@ button:active{
     display: block;
     height: 1px;
     color: black;
+}
+video {
+    margin-top: 60px;
+    margin-left: 30px;
+    width: 640px;
+    height: 360px;
+}
+audio{
+    margin-top: 60px;
+    margin-left: 30px;
+    width: 640px;
+}
+.timeinput{
+    margin-left: 40px;
+    margin-top: 40px;
+}
+.starttime, .endtime{
+    font-size: 14px;
+    min-height: 30px;
+    min-width: 30px;
+    background: #29bea3;
+    color: white;
+    border: 2px solid #29bea3;
+    border-radius: 5px;
+}
+.clip{
+    display: inline-block;
+    padding-top: 15px;
+    padding-right: 5px;
+    padding-left: 5px;
+}
+.play{
+    font-size: 14px;
+    min-height: 30px;
+    min-width: 30px;
+    background: mediumpurple;
+    color: white;
+    border: 2px solid mediumpurple;
+    border-radius: 5px;
+}
+.play:hover{
+    background: rebeccapurple;
+    color: white;
+    border: 2px solid rebeccapurple;
+    cursor: pointer;
+}
+.play:focus{
+    outline: none;
 }

@@ -19,18 +19,50 @@
 
             var gameinput = '{{  game_input|safe  }}';
             var gamevalues = {{  game_content|tojson  }};
-            var n = Object.keys(gamevalues).length;          
+            var n = Object.keys(gamevalues).length;
+
+            var inputfields = document.querySelector('#inputfields');
+            var inputform = document.querySelector('#inputform');
+
+
+            function addInput(a, value){
+                var label = document.createElement("label");
+                var input = document.createElement("input");
+                var br = document.createElement("br");
+
+                label.innerHTML = `Card ${a+1}:  `;
+
+                label.setAttribute("for", `card${a}`);
+                input.setAttribute("id", `card${a}`);
+                input.setAttribute("type", "text");
+                input.setAttribute("name", a);
+                input.setAttribute("placeholder", "Enter text");
+                input.setAttribute("required", "");
+                input.setAttribute("value", value);
+
+                inputfields.appendChild(label);
+                inputfields.appendChild(input);
+                inputfields.appendChild(br);
+            }
+
+            function removeInput(a){
+                var row = inputfields.querySelector(`#card${a}`);
+                var rowlab = inputfields.querySelector(`label[for="card${a}"]`);
+                var breaks = inputfields.querySelectorAll('br');
+
+                inputfields.removeChild(breaks[a-1]);
+                row.parentNode.removeChild(rowlab);
+                row.parentNode.removeChild(row);
+            }
 
             if(gameinput.length >0){
                 document.querySelector('#segmentnumber').value = `${n}`;
 
                 if(gameinput=='multifields'){    
-                    document.querySelector('#inputform').style.display = "block";
-                    var x = "";    
-                    for(var i=0; i<n; i++){
-                        x = x + `Card number ${i+1}: <input name='${i}' type="text" value=${gamevalues[i]} placeholder="Enter text" required><br>`;
+                    inputform.style.display = "block";  
+                    for(var i=1; i<=n; i++){
+                        addInput(i, gamevalues[i]);
                     }
-                    document.querySelector('#inputfields').innerHTML = x;
                 }else if(gameinput=='paragraph'){
                     var x="";
                     for(var i=0; i<n; i++){
@@ -39,12 +71,11 @@
                     document.querySelector('#inputparagraph').innerHTML = x;
                 }
             }else{
-                document.querySelector('#inputform').style.display = "block"
-                var y = "";
+                inputform.style.display = "block"
                 for(var i=0; i<5; i++){
-                    y = y + `Card number ${i+1}: <input name='${i}' type="text" placeholder="Enter text" required><br>`;
+                    addInput(i, "");
                 }
-                document.querySelector('#inputfields').innerHTML = y;
+                var n = 5;
             }
 
             for (var i = 0; i < accordions.length; i++) {
@@ -59,40 +90,37 @@
                     this.nextElementSibling.classList.toggle("show");
                     this.nextElementSibling.style.display = "block";
                     this.style.background = "#229983";
-                    
-                    // document.querySelector('.main').style.height = '110%';
-                    // document.querySelector('.main').style.overflowY = 'auto';
 
                     previous=this;
                 }
             }
 
             document.querySelector('#segmentnumber').onchange = function(){
+                var current = inputfields.querySelectorAll("label").length;
+                
                 var numfields = document.querySelector('#segmentnumber').value;
-            
-                document.querySelector('#inputform').style.display = "block";
-            
-                var x = "";
-                var i;
-                for(i=0; i<numfields; i++){
-                    if(gameinput=='multifields' && i<n){
-                        x = x + `Card number ${i+1}: <input name='${i}' type="text" value=${gamevalues[i]} placeholder="Enter text" required><br>`;
-                    }else{
-                        x = x + `Card number ${i+1}: <input name='${i}' type="text" placeholder="Enter text" required><br>`;
-                    }
-                }
-                document.querySelector('#inputfields').innerHTML = x;
 
-                // if(numfields<7){
-                //     document.querySelector('.main').style.height = ((numfields-5)*12+100) + '%';
-                // }else if (numfields<10){
-                //     document.querySelector('.main').style.height = ((numfields-5)*8+100) + '%';
-                // }else if(numfields<13){
-                //     document.querySelector('.main').style.height = ((numfields-5)*6+100) + '%';
-                // }else{
-                //     document.querySelector('.main').style.height = ((numfields-5)*5+100) + '%';
-                // }
-                // document.querySelector('.main').style.overflowY = 'auto';
+                var difference = numfields - current;
+                
+                inputform.style.display = "block";
+
+                // console.log(`there are ${current} input fields`)
+                
+                if(difference > 0){
+                    console.log(`difference is ${difference}`)
+                    for(var i=0; i<difference; i++){
+                        addInput(i+current, "");
+                    }
+                    console.log(`there are now ${numfields} fields`);
+                }else if(difference < 0){
+                    difference = Math.abs(difference)
+                    console.log(`difference is -${difference}`)
+                    for(var i=current-1; i>numfields-1; i--){
+                        // console.log(`remove ${i}`)
+                        removeInput(i);
+                    }
+                    // console.log(`there are now ${numfields} fields`);
+                }
             }
         })
     </script>
@@ -112,7 +140,7 @@
             <form action={{  url_for('scramble.createtext2b')  }} method="post">
                 Enter text with multiple sentences, separated by periods, exclamation mark, or question mark:<br>
                 <textarea id="inputparagraph" name="inputparagraph" rows="10" cols="100" required>Enter text</textarea><br>
-                <button>Submit</button>
+                <button type="submit">Submit</button>
             </form>
         </div>
 
@@ -135,7 +163,7 @@
             <div id="inputform">
                 <form action = {{  url_for('scramble.createtext2a')  }} method="post">
                     <div id="inputfields"></div>
-                    <button>Submit</button>
+                    <button type="submit">Submit</button>
                 </form>
             </div>
         </div>

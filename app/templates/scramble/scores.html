@@ -86,14 +86,20 @@
 {% block content %}
     
     <div id="top-btn">
-        <a href={{  url_for('scramble.index')  }} class="smlbtn"><div class="fakebuttonsml"><div class="fakebuttonsmltext">Home</div></div></a>
+        <a href={{  url_for('scramble.index')  }} class="smlbtn"><div class="fakebuttonsml"><div class="fakebuttonsmltext">Scramble Home</div></div></a>
     </div>
-    
     <div class="main">
         <h2>{{  score_title  }}</h2>
         <div>
-            <a href={{  url_for('scramble.seetimes', game_type='text')  }} class="smlbtn"><div class="fakebuttonsml" style="margin-right: 10px;"><div class="fakebuttonsmltext">Text High Scores</div></div></a>
-            <a href={{  url_for('scramble.seetimes', game_type='video')  }} class="smlbtn"><div class="fakebuttonsml"><div class="fakebuttonsmltext">Video High Scores</div></div></a>
+            {% if score_title == "Manage Scores" and current_user.is_admin==1 %}
+                <a href={{  url_for('scramble.managescores', game_type='text')  }} class="smlbtn"><div class="fakebuttonsml" style="margin-right: 10px;"><div class="fakebuttonsmltext">Text</div></div></a>
+                <a href={{  url_for('scramble.managescores', game_type='video')  }} class="smlbtn"><div class="fakebuttonsml" style="margin-right: 10px;"><div class="fakebuttonsmltext">Video</div></div></a>
+                <a href={{  url_for('scramble.managescores', game_type='audio')  }} class="smlbtn"><div class="fakebuttonsml"><div class="fakebuttonsmltext">Audio</div></div></a>
+            {% else %}
+                <a href={{  url_for('scramble.seetimes', game_type='text')  }} class="smlbtn"><div class="fakebuttonsml" style="margin-right: 10px;"><div class="fakebuttonsmltext">Text</div></div></a>
+                <a href={{  url_for('scramble.seetimes', game_type='video')  }} class="smlbtn"><div class="fakebuttonsml" style="margin-right: 10px;"><div class="fakebuttonsmltext">Video</div></div></a>
+                <a href={{  url_for('scramble.seetimes', game_type='audio')  }} class="smlbtn"><div class="fakebuttonsml"><div class="fakebuttonsmltext">Audio</div></div></a>
+            {% endif %}
         </div>
         
         <br><br>

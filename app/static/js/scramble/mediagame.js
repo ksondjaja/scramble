@@ -7,9 +7,17 @@ if (window.safari) {
 
 document.addEventListener('DOMContentLoaded', function(){
 
+    var player = document.querySelector('#player');
+    var playerarea = document.querySelector('.player');
+
+    var playmedia = document.querySelectorAll('#play');
+
+    var playall = document.querySelector('#playall');
+
     var totalsec = 0;
     var seconds = 0;
     var minutes = 0;
+    // var isplaying = false;
 
     function timer(){
         totalsec++
@@ -63,6 +71,10 @@ document.addEventListener('DOMContentLoaded', function(){
     var correct = [];
 
     let title = document.querySelector('.title').getBoundingClientRect();
+
+    playerarea.style.top = 50 + parseInt(title.bottom) + 'px' ;
+
+    let playerpos = playerarea.getBoundingClientRect();
     
     document.querySelector('.head').style.height = parseInt(title.bottom) + 'px';
 
@@ -78,20 +90,65 @@ document.addEventListener('DOMContentLoaded', function(){
 
     for(var i=0; i<n; i++){
         dropboxes[i].style.left = (cwidth+23)*(i%div) + col + 'px';
-        dropboxes[i].style.top = (cheight+23)*Math.floor(i/div) + 50 + parseInt(title.bottom) + 'px' ;
+        dropboxes[i].style.top = (cheight+23)*Math.floor(i/div) + 50 + parseInt(playerpos.bottom) + 'px' ;
         cards[i].style.left = (cwidth+20)*(i%div) + 20 + 'px';
         fill.push(99);
         correct.push(i);
-
-        // console.log(dropboxes[i].style.top);
     }
 
     lastbox = dropboxes[n-1].getBoundingClientRect();
 
     for(var i=0; i<n; i++){
-        cards[i].style.top = (cheight+20)*Math.floor(i/div) + 50 + parseInt(title.bottom) + 'px';
-        // console.log(cards[i].style.top)
+        cards[i].style.top = (cheight+20)*Math.floor(i/div) + 50 + parseInt(playerpos.bottom) + 'px';
     }
+
+
+    playmedia.forEach(
+        function(button){
+
+            var content = button.dataset.seconds;
+            var times = content.split(" ");
+            var start = times[0]
+            var end = times[1]
+            // var isplaying = true;                   
+
+            button.addEventListener('mouseenter', function(event){
+                event.stopPropagation();
+            })
+
+            button.addEventListener('click', playVideo, !1)
+
+            // template from https://stackoverflow.com/questions/47643091/html5-video-start-video-at-certain-time-and-play-for-x-amount-of-time
+            
+            function playVideo(event) {
+
+                event.stopPropagation()
+
+                button.style.background = 'rebeccapurple';
+
+                function checkTime() {
+                    if (player.currentTime >= end) {
+                    player.pause();
+
+                    button.style.background = 'mediumpurple';
+
+                    // var isplaying = false;
+
+                    } else {
+                    /* call checkTime every 1/10th 
+                        second until endTime */
+                    setTimeout(checkTime, 1);
+                    }
+                }
+
+                player.currentTime = start;
+                player.play();
+                checkTime();
+                
+            }
+            
+        }
+    )
 
     
     
@@ -249,4 +306,58 @@ document.addEventListener('DOMContentLoaded', function(){
         }
     )
 
-})
+    // playall.addEventListener('click', function(){
+    //     for(let i=0; i<n; i++){
+    //         number = fill[i];
+    //         if(number !== 99){
+    //             console.log(number);
+    //             console.log(isplaying);
+    //             currcard = document.querySelector(`[data-cindex="${number}"]`);
+    //             currbutton = currcard.querySelector('#play');
+
+    //             currbutton.click();
+    //             while(isplaying == true){
+    //                 console.log(isplaying);
+    //             }
+    //             setTimeout(1000);
+    //         }
+    //     }
+    // })
+    //     async function processArray(fill){
+    //         fill.forEach(number =>{
+    //             if(number !== 99){
+    //                 console.log(number);
+    //                 currcard = document.querySelector(`[data-cindex="${number}"]`);
+    //                 currbutton = currcard.querySelector('#play');
+    //             }
+    //             await currbutton.click();
+    //         })
+    //     }
+    // })
+        // for(let i=0; i<n; i++){
+        //     // (function(){
+        //         number = fill[i];
+        //         if(number !== 99){
+        //             console.log(number);
+        //             currcard = document.querySelector(`[data-cindex="${number}"]`);
+        //             currbutton = currcard.querySelector('#play');
+
+        //             if((i+1)<n && fill[i+1] !== 99){
+        //                 console.log(fill[i+1]);
+        //                 nextcard = document.querySelector(`[data-cindex="${fill[i+1]}"]`);
+        //                 nextbutton = nextcard.querySelector('#play');
+        //                 secs = nextbutton.dataset.seconds.split(" ");
+        //                 waittime = parseInt((parseFloat(secs[1]) - parseFloat(secs[0]))*1000);
+        //             }else{
+        //                 waittime = 0;
+        //             }
+
+        //             setTimeout(currbutton.click(), waittime);
+        //             console.log(waittime);
+        //         }
+        //     // })(i);
+        // }
+    // })
+    
+
+});

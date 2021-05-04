@@ -1,13 +1,15 @@
 from sqlalchemy import create_engine
+from config import config
 import os, re
 
-engine = create_engine('mysql://root:kontravoid@localhost/project_italia')
+database_uri = config['default'].SQLALCHEMY_DATABASE_URI
+engine = create_engine(database_uri)
 db = engine.connect()
 
-def getCategories(table):
+def getCategories():
     """Get all available game categories from SQL enum"""
     
-    query = f"SELECT COLUMN_TYPE AS game_category_names FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA='project_italia' AND TABLE_NAME='{table}' AND COLUMN_NAME='game_category'"
+    query = f"SELECT COLUMN_TYPE AS game_category_names FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA='dig_ital' AND TABLE_NAME='scramble_games' AND COLUMN_NAME='game_category'"
     allcatquery = str(db.execute(query).fetchone()[0])
     allcat = []
     cat = ""
@@ -21,16 +23,16 @@ def getCategories(table):
             cat += allcatquery[i]
     return allcatquery, allcat
 
-def getVideoId(youtubelink):
-    """Get just the video ID from a YouTube video link"""
+# def getVideoId(youtubelink):
+#     """Get just the video ID from a YouTube video link"""
 
-    if 'watch?v=' in youtubelink:
-        ind = youtubelink.index('watch?v=')
-        ind += 8
-        if len(youtubelink)<(ind+11):
-            return 'invalid'
-        else:
-            videoid = youtubelink[ind:(ind+11)]
-            return videoid
-    else:
-        return 'invalid'
+#     if 'watch?v=' in youtubelink:
+#         ind = youtubelink.index('watch?v=')
+#         ind += 8
+#         if len(youtubelink)<(ind+11):
+#             return 'invalid'
+#         else:
+#             videoid = youtubelink[ind:(ind+11)]
+#             return videoid
+#     else:
+#         return 'invalid'

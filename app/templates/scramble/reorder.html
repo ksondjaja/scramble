@@ -5,19 +5,28 @@
     <link rel="stylesheet" type="text/css" media="screen and (min-width: 640px)" href={{ url_for('static', filename='css/scramble/game.css') }}>
     <link rel="stylesheet" type="text/css" media="screen and (max-width: 639px)" href={{ url_for('static', filename='css/scramble/game_sm.css') }}>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% if game_type=='video' %}
+        <link href="https://vjs.zencdn.net/7.10.2/video-js.css" rel="stylesheet" />
+    {% endif %}
 
     {% if game_type=='text' %}
         <script src={{ url_for('static', filename='js/scramble/textgame.js') }}></script>
-    {% elif game_type=='video' %}
-        <script src={{ url_for('static', filename='js/scramble/videogame.js') }}></script>
+    {% elif game_type=='video' or game_type=='audio' %}
+        <script src={{ url_for('static', filename='js/scramble/mediagame.js') }}></script>
     {% endif %}
 </head>
-<body>
+<body oncontextmenu="return false;">
     <div id="user">Logged in as {{  first_name  }}</div>
     <div class="head">
 
         {% if mode=='createpreview'%}
-            <a href={{ url_for('scramble.create')  }}><div class="fakebutton"><div class="fakebuttontext">Back</div></div></a>
+
+            {% if game_type=='text' %}
+                <a href={{ url_for('scramble.previewtext')  }}><div class="fakebutton"><div class="fakebuttontext">Back</div></div></a>
+            {% elif game_type=='video' or game_type=='audio' %}
+                <a href={{ url_for('scramble.previewmedia2')  }}><div class="fakebutton"><div class="fakebuttontext">Back</div></div></a>
+            {% endif %}
+
         {% elif mode=='game' %}
             <div id="backbutton">
                 <a href={{ url_for('scramble.index')  }}><div class="discardbutton"><div class="fakebuttontext">Quit Game</div></div></a>
@@ -42,7 +51,11 @@
         
         {% if mode=='createpreview' %}
             <div id="nextbutton2">
-                <a href={{  url_for('scramble.save')  }}><div class="approvebutton"><div class="fakebuttontext">Save Game</div></div></a>
+                {% if game_type=='text' %}
+                    <a href={{  url_for('scramble.save')  }}><div class="approvebutton"><div class="fakebuttontext">Save Game</div></div></a>
+                {% elif game_type=='video' or game_type=='audio' %}
+                    <a href={{  url_for('scramble.savemedia')  }}><div class="approvebutton"><div class="fakebuttontext">Save Game</div></div></a>
+                {% endif %}
             </div>
         {% elif mode=='adminapprove' %}
             <div id="nextbutton2">
@@ -59,9 +72,19 @@
         
         {% if game_type=='video' %}
             <div class="player">
-                <!-- <iframe type="text/html" width="640" height="360"
-                src="https://www.youtube-nocookie.com/embed/zE7PKRjrid4?start=0&end=20;autohide=1&controls=0"
-                frameborder="0"></iframe> -->
+                <video id="player" class="video-js" preload="auto" data-setup="{}">
+                    <source src={{ url_for('static', filename=media_path|safe) }} type={{  media_format|safe  }}>
+                </video>
+                <br>
+                <!-- <button id="playall">Play Sequence &#9658</button> -->
+            </div>
+        {% elif game_type=='audio' %}
+            <div class="player" height="0" width="0">
+                <audio id="player">
+                    <source src={{ url_for('static', filename=media_path|safe) }} type={{  media_format|safe  }}>
+                </audio>
+                <br>
+                <!-- <button id="playall">Play Sequence &#9658</button> -->
             </div>
         {% endif %}
 
@@ -74,16 +97,17 @@
 
         <div class="card-container">
             {% for i in range(cardnum) %}
-                    <div class="card" data-cindex={{  order.get(cards[i])|safe  }} draggable="true">
-                        <div class="content">
-                            {% if game_type=='text' %}
-                                {{  cards[i]  }}
-                            {% elif game_type=='video' %}
-                                {{  letters[i]  }}<br>
-                                <button class="playvid" data-seconds={{  cards[i]|safe  }}>&#9658</button>
-                            {% endif %}
-                        </div>
-                    </div>
+                <div class="card" data-cindex={{  order.get(cards[i])|safe  }} draggable="true">
+                    <div class="content">
+                        {% if game_type=='text' %}
+                            {{  cards[i]  }}
+                            </div>
+                        {% elif game_type=='video' or game_type=='audio' %}
+                            {{  letters[i]  }}
+                            </div>
+                            <button id="play" data-seconds="{{  cards[i]|safe  }}">&#9658</div>
+                        {% endif %}
+                </div>
             {% endfor %}
         </div>
 

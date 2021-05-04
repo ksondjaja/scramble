@@ -1,0 +1,236 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Sequence Reordering Game
+{% endblock title %}
+
+{% block links %}
+    <link rel="stylesheet" type="text/css" media="screen and (min-width: 768px)" href={{ url_for('static', filename='css/scramble/create.css') }}>
+    <link rel="stylesheet" type="text/css" media="screen and (max-width: 767px)" href={{ url_for('static', filename='css/scramble/create_sm.css') }}>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    {% if game_type == 'video' %}
+        <link href="https://vjs.zencdn.net/7.10.2/video-js.css" rel="stylesheet" />
+    {% endif %}
+
+{% endblock links %}
+
+{% block scripts %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function(){
+
+            var player = document.querySelector('#player');
+
+            var gameinput = '{{  game_input|safe  }}';
+            var gamevalues = {{  game_content|tojson  }};
+            var n = Object.keys(gamevalues).length;
+
+            var inputfields = document.querySelector('#inputfields');
+            var numfields = document.querySelector('#segmentnumber').value;
+
+            var br = document.createElement("br");
+
+            document.querySelector('#inputform').style.display = "block"
+
+            function addInput(a, mark, value){
+                var div = document.createElement("div")
+                var timebttn = document.createElement("button");
+                var input = document.createElement("input");
+
+                div.setAttribute("class", "timerow")
+
+                timebttn.innerHTML = '&#8627';
+                timebttn.setAttribute("class", `${mark}time`);
+                timebttn.setAttribute("data-tindex", a);
+                timebttn.setAttribute("type", "button");
+
+                input.setAttribute("id", `${mark}${a}`);
+                input.setAttribute("type", "text");
+                input.setAttribute("name", `${mark}${a}`);
+                input.setAttribute("placeholder", `${mark} time`);
+                input.setAttribute("required", "");
+                input.setAttribute("value", value);
+
+                inputfields.appendChild(div);
+                div.appendChild(timebttn);
+                div.appendChild(input);
+            }
+
+            function removeInput(a, mark){
+                var row = inputfields.querySelector(`#${mark}${a}`);
+                var rowbttn = inputfields.querySelector(`button[data-tindex='${a}']`);
+
+                rowbttn.parentNode.removeChild(rowbttn);
+                row.parentNode.removeChild(row);
+            }
+
+            function getStart(event){
+                var currenttime = player.currentTime;
+                var n = event.target.dataset.tindex;
+
+                document.querySelector(`#start${n}`).value = currenttime;
+            }
+
+            function getEnd(event){
+                var currenttime = player.currentTime;
+                var n = parseInt(event.target.dataset.tindex);
+                var numfields = document.querySelector('#segmentnumber').value;
+
+                // console.log(`there are ${numfields} input fields`)
+                // console.log(`the last clip is number ${n}`);
+
+                document.querySelector(`#end${n}`).value = currenttime;
+
+                if((n+1)<numfields){
+                    // console.log("next");
+                    document.querySelector(`#start${n+1}`).value = currenttime;
+                }
+            }
+
+
+            if(n >0){
+                document.querySelector('#segmentnumber').value = `${n}`;
+
+                for(var i=0; i<n; i++){
+                    var cliptime = gamevalues[i].split(" ")
+                    var label = document.createElement("label");
+                    label.innerHTML = `Clip ${i+1}:  `;
+                    label.setAttribute("for", `start${i}`);
+                    inputfields.appendChild(label)
+
+                    addInput(i, "start", cliptime[0]);
+                    addInput(i, "end", cliptime[1]);
+
+                    var br = document.createElement("br");
+                    inputfields.appendChild(br);
+
+                    var thistimebttn = document.querySelectorAll(`button[data-tindex='${i}']`);
+                }
+            }else{
+                for(var i=0; i<5; i++){
+                    var label = document.createElement("label");
+                    label.innerHTML = `Clip ${i+1}:  `;
+                    label.setAttribute("for", `start${i}`);
+                    inputfields.appendChild(label)
+
+                    addInput(i, "start", "");
+                    addInput(i, "end", "");
+
+                    var br = document.createElement("br");
+                    inputfields.appendChild(br);
+
+                    var thistimebttn = document.querySelectorAll(`button[data-tindex='${i}']`);
+                }
+                var n = 5;
+            }
+            
+            var clipstart = document.querySelectorAll('.starttime');
+            var clipend = document.querySelectorAll('.endtime');
+            
+            document.querySelector('#segmentnumber').onchange = function(){
+                var current = inputfields.querySelectorAll("label").length;
+
+                var numfields = document.querySelector('#segmentnumber').value;
+
+                var difference = numfields - current;
+
+                // console.log(`there are ${current} input fields`);
+                // console.log(`the difference is ${difference}`);
+                
+                if(difference > 0){
+                    // console.log(`difference is ${difference}`)
+                    for(var i=0; i<difference; i++){
+                        var label = document.createElement("label");
+                        label.innerHTML = `Clip ${i+current+1}:  `;
+                        label.setAttribute("for", `start${i+current}`);
+                        inputfields.appendChild(label)
+
+                        addInput(i+current, "start","");
+                        addInput(i+current, "end","");
+
+                        var br = document.createElement("br");
+                        inputfields.appendChild(br);
+
+                        var thistimebttn = document.querySelectorAll(`button[data-tindex='${i+current}']`);
+                        // console.log(thistimebttn);
+                        thistimebttn[0].addEventListener('click', getStart);
+                        thistimebttn[1].addEventListener('click', getEnd);
+                    }
+                    // console.log(`there are now ${numfields} fields`);
+                }else if(difference < 0){
+                    difference = Math.abs(difference)
+                    // console.log(`difference is -${difference}`)
+                    for(var i=current-1; i>numfields-1; i--){
+                        // console.log(`remove ${i}`)
+                        var rowlab = inputfields.querySelector(`label[for="start${i}"]`);
+                        inputfields.removeChild(rowlab);
+
+                        removeInput(i, "start");
+                        removeInput(i, "end");
+
+                        var breaks = inputfields.querySelectorAll('br');
+                        inputfields.removeChild(breaks[i-1]);
+                    }
+                    // console.log(`there are now ${numfields} fields`);
+                }
+            }
+
+            clipstart.forEach(
+                function(startbutton){
+                    startbutton.addEventListener('click', getStart);
+                }
+            );
+
+            clipend.forEach(
+                function(endbutton){
+                    endbutton.addEventListener('click', getEnd);
+                }
+            );
+
+        });
+    </script>
+{% endblock scripts %}
+{% block content %}
+        <div id="top-btn">
+            <a href={{  url_for('scramble.create')  }} class="smlbtn"><div class="fakebuttonsml"><div class="fakebuttonsmltext">Back</div></div></a>
+            <a href={{  url_for('scramble.cancelcreate')  }} class="smlbtn"><div class="cancelbuttonsml"><div class="fakebuttonsmltext">Cancel (discard unsaved game info)</div></div></a><br>
+        </div>
+        <div class="main">
+
+            {% if game_type == 'video' %}
+                <video id="player" class="video-js" preload="auto" width="640" height="360" data-setup="{}" controls>
+                    <source src={{ url_for('static', filename=media_temp_path|safe) }} type={{  media_format|safe  }}>
+                </video>
+            {% elif game_type == 'audio' %}
+                <audio id="player" controls>
+                    <source src={{ url_for('static', filename=media_temp_path|safe) }} type={{  media_format|safe  }}>
+                </audio>
+            {% endif %}
+
+            <div class="timeinput">
+                <label for="segmentnumber">Select number of clips to slice and shuffle:</label>
+                <select id="segmentnumber" name="segmentnumber">
+                    <option value="5">5 clips</option>
+                    <option value="6">6 clips</option>
+                    <option value="7">7 clips</option>
+                    <option value="8">8 clips</option>
+                    <option value="9">9 clips</option>
+                    <option value="10">10 clips</option>
+                    <option value="11">11 clips</option>
+                    <option value="12">12 clips</option>
+                    <option value="13">13 clips</option>
+                    <option value="14">14 clips</option>
+                    <option value="15">15 clips</option>
+                </select>
+                <br>
+                <div id="inputform">
+                    <p>Click &#8627 to enter current time as start or end time.</p>
+                    <form action={{  url_for('scramble.previewmedia')  }} method="post">
+                        <div id="inputfields"></div>
+                        <br>
+                        <button type="submit">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+{% endblock content %}

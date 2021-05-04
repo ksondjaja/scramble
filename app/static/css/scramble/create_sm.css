@@ -47,8 +47,8 @@ button:active{
     border: 2px solid #27aa92;
 }
 .main{
-    margin-left: 40px;
-    margin-top: 40px;
+    margin-left: 10px;
+    margin-top: 20px;
     padding-bottom: 60px;
     overflow-y: auto;
 }
@@ -91,6 +91,10 @@ button:active{
 }
 #inputform{
     display: none;
+}
+#inputfields input{
+    margin-right: 30px;
+    margin-left: 5px;
 }
 .other{
     padding-left: 20px;
@@ -172,4 +176,50 @@ button:active{
     display: block;
     height: 1px;
     color: black;
+}
+video #player{
+    margin-top: 60px;
+    margin-left: 0px;
+    width: 426px;
+    height: 240px;
+}
+audio{
+    margin-top: 60px;
+    margin-left: 0px;
+    width: 90%;
+}
+.timeinput{
+    margin-left: 40px;
+    margin-top: 40px;
+}
+.starttime, .endtime{
+    font-size: 14px;
+    min-height: 30px;
+    min-width: 30px;
+    background: #29bea3;
+    color: white;
+    border: 2px solid #29bea3;
+    border-radius: 5px;
+}
+.clip{
+    display: inline-block;
+    padding-top: 15px;
+    padding-right: 5px;
+    padding-left: 5px;
+}
+.play{
+    font-size: 14px;
+    min-height: 30px;
+    min-width: 30px;
+    background: mediumpurple;
+    color: white;
+    border: 2px solid mediumpurple;
+    border-radius: 5px;
+    outline: none;
+}
+.play:hover{
+    background: rebeccapurple;
+    color: white;
+    border: 2px solid rebeccapurple;
+    cursor: pointer;
 }

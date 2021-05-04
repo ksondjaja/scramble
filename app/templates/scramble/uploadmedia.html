@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Sequence Reordering Game
+{% endblock title %}
+
+{% block links %}
+    <link rel="stylesheet" type="text/css" media="screen and (min-width: 768px)" href={{ url_for('static', filename='css/scramble/create.css') }}>
+    <link rel="stylesheet" type="text/css" media="screen and (max-width: 767px)" href={{ url_for('static', filename='css/scramble/create_sm.css') }}>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% endblock links %}
+
+{% block scripts %}
+{% endblock scripts %}
+        
+
+{% block content %}
+    <div id="top-btn">
+        <a href={{  url_for('scramble.gameinfo')  }} class="smlbtn"><div class="fakebuttonsml"><div class="fakebuttonsmltext">Back</div></div></a>
+        <a href={{  url_for('scramble.cancelcreate')  }} class="smlbtn"><div class="cancelbuttonsml"><div class="fakebuttonsmltext">Cancel (discard unsaved game info)</div></div></a><br>
+    </div>
+
+    <div class="main">
+        <p>{{  message  }}</p>
+
+        <h3>Upload a {{  game_type  }} file from your device to slice and scramble</h3>
+        <p>{% if game_type == 'video' %}
+                Supported formats: .mp4
+            {% elif game_type == 'audio' %}
+                Supported formats: .mp3, .wav
+            {% endif %}
+            <br>
+            Maximum size: {{  max_mb  }}MB</p>
+        <br>
+
+        <form action={{  url_for('scramble.uploadtmp')  }} method="post" enctype="multipart/form-data">
+            <p><input id="file-media" class="form-control-file" type="file" name="file-media"></p>
+            <button type="submit">Upload</button>
+        </form>
+
+    </div>
+    
+{% endblock content %}

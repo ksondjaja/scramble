@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Sequence Reordering Game
+{% endblock title %}
+
+{% block links %}
+    <link rel="stylesheet" type="text/css" media="screen and (min-width: 768px)" href={{ url_for('static', filename='css/scramble/create.css') }}>
+    <link rel="stylesheet" type="text/css" media="screen and (max-width: 767px)" href={{ url_for('static', filename='css/scramble/create_sm.css') }}>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    {% if game_type == 'video' %}
+        <link href="https://vjs.zencdn.net/7.10.2/video-js.css" rel="stylesheet" />
+    {% elif game_type == 'audio' %}
+
+    {% endif %}
+
+{% endblock links %}
+
+{% block scripts %}
+    <script src={{ url_for('static', filename='js/scramble/previewmedia.js') }}></script>
+{% endblock scripts %}
+
+{% block content %}
+    <div id="top-btn">
+        <a href={{  url_for('scramble.createmedia')  }} class="smlbtn"><div class="fakebuttonsml"><div class="fakebuttonsmltext">Back</div></div></a>
+        <a href={{  url_for('scramble.cancelcreate')  }} class="smlbtn"><div class="cancelbuttonsml"><div class="fakebuttonsmltext">Cancel (discard unsaved game info)</div></div></a><br>
+    </div>
+    <div class="main">
+        {% if game_type == 'video' %}
+            <video id="player" class="video-js" preload="auto" data-setup="{}">
+                <source src={{ url_for('static', filename=media_temp_path|safe) }} type={{  media_format|safe  }}>
+            </video>
+        {% elif game_type == 'audio' %}
+            <audio id="player" style="display: none;">
+                <source src={{ url_for('static', filename=media_temp_path|safe) }} type={{  media_format|safe  }}>
+            </audio>
+        {% endif %}
+
+        <br>
+        <div class = "clip">
+            <button class="play" data-seconds="{{  full_media|safe  }}">&#9658 Play All</button>
+        </div>
+        <br>
+
+        {% for key, value in game_content.items() %}
+            <div class="clip" data-cindex={{  key|safe  }}>
+                <div class="content">
+                    <button class="play" data-seconds="{{  value|safe  }}" >&#9658 Clip no. {{  loop.index}}</button>
+                </div>
+            </div>
+
+            {% if loop.index%5 == 0 %}
+                <br>
+            {% endif %}
+
+        {% endfor %}
+        
+        <br><br>
+        <a href={{  url_for('scramble.mediagame')  }} class="smlbtn"><div class="fakebuttonsml"><div class="fakebuttonsmltext">Preview Game</div></div></a>
+    </div>
+{% endblock content %}
