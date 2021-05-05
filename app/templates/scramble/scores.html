@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    Sequence Reordering Game
+    Scramble: Sequence Reordering Game
 {% endblock title %}
 
 {% block links %}
@@ -113,7 +113,7 @@
         <div id="tablediv">
             <table>
                 <th>Ranking</th>
-                {% if score_title != "Your Game Scores" %}
+                {% if score_title != "My Game Scores" %}
                     <th>Player</th>
                 {% endif %}
                 {% if score_title == "Manage Scores" and current_user.is_admin==1 %}
@@ -131,7 +131,7 @@
                 {% for score in easy %}
                     <tr>
                         <td>{{  score.ranking  }}</td>
-                        {% if score_title != "Your Game Scores" %}
+                        {% if score_title != "My Game Scores" %}
                             <td>{{  score.first_name  }}</td>
                         {% endif %}
                         {% if score_title == "Manage Scores" and current_user.is_admin==1 %}
@@ -152,7 +152,7 @@
         <div id="tablediv">
             <table>
                 <th>Ranking</th>
-                {% if score_title != "Your Game Scores" %}
+                {% if score_title != "My Game Scores" %}
                     <th>Player</th>
                 {% endif %}
                 {% if score_title == "Manage Scores" and current_user.is_admin==1 %}
@@ -170,7 +170,7 @@
                 {% for score in medium %}
                     <tr>
                         <td>{{  score.ranking  }}</td>
-                        {% if score_title != "Your Game Scores" %}
+                        {% if score_title != "My Game Scores" %}
                             <td>{{  score.first_name  }}</td>
                         {% endif %}
                         {% if score_title == "Manage Scores" and current_user.is_admin==1 %}
@@ -191,7 +191,7 @@
         <div id="tablediv">
             <table>
                 <th>Ranking</th>
-                {% if score_title != "Your Game Scores" %}
+                {% if score_title != "My Game Scores" %}
                     <th>Player</th>
                 {% endif %}
                 {% if score_title == "Manage Scores" and current_user.is_admin==1 %}
@@ -209,7 +209,7 @@
                 {% for score in difficult %}
                     <tr>
                         <td>{{  score.ranking  }}</td>
-                        {% if score_title != "Your Game Scores" %}
+                        {% if score_title != "My Game Scores" %}
                             <td>{{  score.first_name  }}</td>
                         {% endif %}
                         {% if score_title == "Manage Scores" and current_user.is_admin==1 %}

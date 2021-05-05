@@ -342,11 +342,12 @@ def adminpreview(table, game_id):
     if current_user.is_admin != 1:
         return redirect(url_for('scramble.managesubmitted'))
 
-    query = f"SELECT game_content, game_type, game_title FROM scramble_approved WHERE is_approved={table} AND game_id={game_id}"
+    query = f"SELECT game_content, game_type, game_title FROM scramble_games WHERE is_approved={table} AND game_id={game_id}"
     game = db.execute(query).fetchone()
     game_content = literal_eval(game[0])
     game_type = game[1]
     game_title = game[2]
+    mode = "preview"
 
     media_path = f'res/uploads/{game_title}'
     media_format = f'{game_type}/{game_title.split(".")[-1]}'
@@ -362,6 +363,7 @@ def adminpreview(table, game_id):
     session['media_file_name'] = game_title
     session['media_format'] = media_format
     session['game_type'] = game_type
+    session['mode'] = mode
     
 
     if game_type == 'text':
@@ -373,7 +375,7 @@ def adminpreview(table, game_id):
 @scramble.route('/adminapprove/<game_id>')
 @login_required
 def adminapprove(game_id):
-    """Lets administrator approve user-submitted games (by moving a game from scramble_to_approve table to scramble_approved table in MySQL)"""
+    """Lets administrator approve user-submitted games (by moving a game from scramble_to_approve table to scramble_games table in MySQL)"""
 
     if current_user.is_admin != 1:
         return redirect(url_for('scramble.index'))
@@ -438,13 +440,13 @@ def managescores(game_type):
 
     score_title = "Manage Scores"
 
-    query = f"WITH game_ranking AS(SELECT *, RANK() OVER(ORDER BY game_time)ranking FROM scramble_scores WHERE game_type='{game_type}' AND game_difficulty='easy') SELECT ranking, first_name, user_id, game_difficulty, game_type, game_id, submit_time, SEC_TO_TIME(game_time) AS game_time_sec from game_ranking"
+    query = f"WITH game_ranking AS(SELECT *, RANK() OVER(ORDER BY game_time)ranking FROM scramble_scores WHERE game_type='{game_type}' AND game_difficulty='easy') SELECT score_id, ranking, first_name, user_id, game_difficulty, game_type, game_id, submit_time, SEC_TO_TIME(game_time) AS game_time_sec from game_ranking"
     easy = db.execute(query)
 
-    query = f"WITH game_ranking AS(SELECT *, RANK() OVER(ORDER BY game_time)ranking FROM scramble_scores WHERE game_type='{game_type}' AND game_difficulty='medium') SELECT ranking, first_name, user_id, game_difficulty, game_type, game_id, submit_time, SEC_TO_TIME(game_time) AS game_time_sec from game_ranking"
+    query = f"WITH game_ranking AS(SELECT *, RANK() OVER(ORDER BY game_time)ranking FROM scramble_scores WHERE game_type='{game_type}' AND game_difficulty='medium') SELECT score_id, ranking, first_name, user_id, game_difficulty, game_type, game_id, submit_time, SEC_TO_TIME(game_time) AS game_time_sec from game_ranking"
     medium = db.execute(query)
 
-    query = f"WITH game_ranking AS(SELECT *, RANK() OVER(ORDER BY game_time)ranking FROM scramble_scores WHERE game_type='{game_type}' AND game_difficulty='difficult') SELECT ranking, first_name, user_id, game_difficulty, game_type, game_id, submit_time, SEC_TO_TIME(game_time) AS game_time_sec from game_ranking"
+    query = f"WITH game_ranking AS(SELECT *, RANK() OVER(ORDER BY game_time)ranking FROM scramble_scores WHERE game_type='{game_type}' AND game_difficulty='difficult') SELECT score_id, ranking, first_name, user_id, game_difficulty, game_type, game_id, submit_time, SEC_TO_TIME(game_time) AS game_time_sec from game_ranking"
     difficult = db.execute(query)
     
     return render_template('scramble/scores.html', game_type=game_type, easy=easy, medium=medium, difficult=difficult, score_title=score_title)
@@ -452,12 +454,12 @@ def managescores(game_type):
 
 @scramble.route('/scorediscard/<score_id>/')
 @login_required
-def scorediscard(user_id, score_id, game_id):
+def scorediscard(score_id):
     """Lets administrator remove game scores from database"""
     query = f"DELETE FROM scramble_scores WHERE score_id={score_id}"
     db.execute(query)
 
-    return redirect(url_for('scramble.managescores'))
+    return redirect(url_for('scramble.managescores', game_type='text'))
 
 
 ##---------------------------------------------------MANAGE GAMES (FOR PLAYERS)-------------------------------------------------------##
@@ -719,12 +721,12 @@ def uploadtmp():
             message = f"Please select a .mp4 video file sized under {max_mb}MB"
             
             if (size > max_mb*1024*1024) or (file_name[-1] not in ["mp4"]):
-                return render_template("scramble/createmedia.html", message=message, extension=extension, size=size)
+                return render_template("scramble/uploadmedia.html", message=message, extension=extension, size=size)
         elif game_type == 'audio':
             message = f"Please select a .mp3 or .wav audio file sized under {max_mb}MB"
             
             if (size > max_mb*1024*1024) or (file_name[-1] not in ["mp3", "wav"]):
-                return render_template("scramble/createmedia.html", message=message, extension=extension, size=size)
+                return render_template("scramble/uploadmedia.html", message=message, extension=extension, size=size)
         
 
         if uploaded_file.filename != '':

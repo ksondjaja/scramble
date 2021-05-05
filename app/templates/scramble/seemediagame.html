@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    Sequence Reordering Game
+    Scramble: Sequence Reordering Game
 {% endblock title %}
 
 {% block links %}
@@ -36,6 +36,7 @@
                     <source src={{ url_for('static', filename=media_path|safe) }} type={{  media_format|safe  }}>
                 </audio>
             {% endif %}
+            <br>
             <div class = "clip">
                 <button class="play" data-seconds="{{  full_media|safe  }}">&#9658 Play Full {{  played_game_type|capitalize  }}</button>
             </div>

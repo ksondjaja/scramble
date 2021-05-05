@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    Sequence Reordering Game
+    Scramble: Sequence Reordering Game
 {% endblock title %}
 
 {% block links %}
@@ -60,7 +60,7 @@
 
                 if(gameinput=='multifields'){    
                     inputform.style.display = "block";  
-                    for(var i=1; i<=n; i++){
+                    for(var i=0; i<n; i++){
                         addInput(i, gamevalues[i]);
                     }
                 }else if(gameinput=='paragraph'){
