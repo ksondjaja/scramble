@@ -1,0 +1,153 @@
+@charset "UTF-8";
+/*
+_variables.scss
+
+Global variables used throughout the application
+
+
+*/
+/* Colors */
+/* Fonts */
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,500&family=Source+Sans+Pro:wght@300;400&display=swap");
+/* Breakpoints */
+/* Header */
+/* Sidebar */
+/* Footer */
+/* Forms */
+/* Hyperlinks */
+/* Bootstrap Overrides */
+.container {
+  margin-top: 10vh;
+}
+
+.mcq-question-links .col {
+  padding: 0;
+  margin: 0;
+}
+.mcq-question-links .col .mcq-question-circle {
+  position: relative;
+  width: 100%;
+  height: 0.2em;
+  background: #eee;
+}
+.mcq-question-links .col .mcq-question-circle::before {
+  content: "";
+  position: absolute;
+  width: 2em;
+  height: 2em;
+  border-radius: 50%;
+  border: solid 1px #ccc;
+}
+.mcq-question-links .col .mcq-question-circle[answered] {
+  background-color: #29bea3;
+}
+.mcq-question-links ul {
+  align-content: center;
+  align-items: center;
+  counter-reset: stepCount;
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  height: 30px;
+}
+.mcq-question-links li {
+  background: #df6493;
+  color: white;
+  content: " ";
+  display: flex;
+  flex-grow: 1;
+  height: 0.3em;
+  line-height: 1em;
+  margin: 0;
+  position: relative;
+  text-align: right;
+  transition: all 0.3s;
+}
+.mcq-question-links li::before {
+  color: white;
+  background: #df6493;
+  border-radius: 50%;
+  counter-increment: stepCount;
+  content: counter(stepCount);
+  height: 2em;
+  left: -2em;
+  line-height: 2em;
+  position: absolute;
+  text-align: center;
+  top: -0.85em;
+  width: 2em;
+  transition: all 0.3s;
+}
+.mcq-question-links li:last-child::before {
+  content: "✓";
+  font-size: 1.5em;
+}
+.mcq-question-links li:hover::before {
+  cursor: pointer;
+}
+.mcq-question-links li.active {
+  background-color: #eee;
+}
+.mcq-question-links li.active ~ li {
+  background-color: #eee;
+}
+.mcq-question-links li.active ~ li::before {
+  background-color: #eee;
+}
+.mcq-question-links li:last-child {
+  flex-basis: 0;
+  flex-grow: 0;
+  flex-shrink: 1;
+}
+
+.mcq-question {
+  display: none;
+}
+.mcq-question .mcq-question-header {
+  padding: 1em 0;
+  font-weight: bold;
+}
+.mcq-question .mcq-question-header :nth-child(2) {
+  text-align: right;
+}
+.mcq-question .mcq-question-title {
+  padding: 2rem;
+  font-size: 2em;
+  text-align: center;
+  border-top: solid 1px #f4f4f4;
+}
+.mcq-question .mcq-question-content {
+  text-align: center;
+  border-bottom: solid 1px #f4f4f4;
+  padding: 0 5rem 5rem 5rem;
+  font-size: 1.5em;
+}
+.mcq-question .mcq-question-options {
+  padding: 2rem 0;
+}
+.mcq-question .mcq-question-options .mcq-option {
+  text-align: center;
+  background-color: #29bea3;
+  color: #fff;
+  padding: 15px 0;
+  border-radius: 5px;
+  font-size: 1.2em;
+  transition: background-color 0.3s;
+}
+.mcq-question .mcq-question-options .mcq-option:hover {
+  background-color: #20947f;
+  cursor: pointer;
+}
+.mcq-question .mcq-question-options .mcq-option[selected] {
+  background-color: #cc2a68;
+}
+
+.mcq-question[active] {
+  display: block;
+}
+
+#end {
+  display: none;
+}
+
+/*# sourceMappingURL=mcq_quiz.css.map */

@@ -1,0 +1,66 @@
+/*
+_variables.scss
+
+Global variables used throughout the application
+
+
+*/
+
+/* Colors */
+$body-bgc:#fff;
+$color-primary: #29bea3;
+$color-accent: #cc2a68;
+$color-error:#cc2a68;
+/* Fonts */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,500&family=Source+Sans+Pro:wght@300;400&display=swap');
+ 
+
+$font-source: 'Source Sans Pro', sans-serif;
+ 
+$font-title: 'Playfair Display', serif;
+$font-primary: $font-source;
+
+/* Breakpoints */
+
+$breakpoint-mobile: 480px;
+$breakpoint-tablet: 768px;
+$breakpoint-laptop: 1024px;
+$breakpoint-desktop:1025px;
+ 
+
+
+/* Header */
+$header-bgc: #fff;
+$header-height: 7vh;
+
+/* Sidebar */
+
+$sidebar-width:300px;
+
+
+/* Footer */
+$footer-height: 5vh;
+
+
+/* Forms */
+$form-padding: 5px;
+$input-bgc: #fafafa;
+
+/* Hyperlinks */
+$link-color: #fff;
+$link-color-hover: #e2e2e2;
+$icon-link-color:#aaa;
+$icon-link-color-hover: #555;
+
+
+
+/* Bootstrap Overrides */
+
+$theme-colors: (
+  "primary": $color-primary,
+  "secondary": $color-accent,
+  "danger": $color-error
+);
+ 
+

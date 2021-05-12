@@ -1,0 +1,31 @@
+{% macro render_field(field, errors) %}
+
+ 
+
+
+    {% if field.name in errors %}
+
+        <label for="{{field.name}}">{{field.label.text}}</label> 
+        {{field(id=field.name,class='form-control is-invalid', placeholder=kwargs['placeholder'])}}
+        <div class="invalid-feedback">
+        {{errors[field.name][0]}}
+        </div>
+
+    {% else %}
+
+        <label class="{{kwargs['label_class']}}"for="{{field.name}}">{{field.label.text}}</label> 
+        {{field(id=field.name,class=kwargs['input_class'] or 'form-control', placeholder=kwargs['placeholder'])}}
+    
+    {% endif %}
+
+
+
+
+
+{% endmacro %}
+
+
+
+
+
+ 

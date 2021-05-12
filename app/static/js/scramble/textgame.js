@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', function(){
     var fill = [];
     var correct = [];
 
-    let title = document.querySelector('.title').getBoundingClientRect();
+    var title = document.querySelector('.title').getBoundingClientRect();
     
     document.querySelector('.head').style.height = parseInt(title.bottom) + 'px';
 

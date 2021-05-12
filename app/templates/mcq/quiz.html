@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% from './macros/_render_mcq.html' import render_mcq  %}
+
+{% block links %}
+
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/mcq_quiz.css') }}">
+
+{% endblock links %}
+
+{% block scripts %}
+
+<script src="{{ url_for('static', filename='js/mcq/mcq_quiz.js') }}" type="module" defer></script>
+
+{% endblock scripts %}
+
+{% block content %}
+
+
+<div class="row mb-4 justify-content-end align-items-center">
+    <h5 id="time-passed" class="text-muted">00:00:00</h5>
+</div>
+
+<div class="row mt-5 mb-5 mcq-question-links">
+    <ul>
+
+        <li class="active"></li>
+        {% for i in range(quiz.questions|length )  %}
+        <li></li>
+        {% endfor %}
+
+    </ul>
+</div>
+
+
+
+<div class="questions">
+
+    {% for question in quiz.questions %}
+
+    {{render_mcq(question)}}
+
+    {% endfor %}
+
+
+
+    <div class="container mcq-question">
+
+        <div class="row align-items-center justify-content-center">
+
+            <h2>
+                Finished?
+            </h2>
+
+        </div>
+
+        <div class="row align-items-center justify-content-center">
+            <p><small>Don't forget to double check your answers. Submissions are <em>final</em>.</p>
+        </div>
+
+        <div class="row align-items-center justify-content-center">
+
+            <button id="btn-submit-quiz" class="btn btn-primary">Submit Quiz</button>
+
+        </div>
+
+
+    </div>
+
+    
+
+</div>
+
+
+
+
+{% endblock content %}

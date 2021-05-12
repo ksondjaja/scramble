@@ -1,0 +1,46 @@
+header #menu-expand{
+  display: block;
+  float: left;
+  margin-top: 1vh;
+  color: white;
+  padding: 5px 10px;
+  margin-left: 10px;
+}
+#hamburger{
+  display: inline-block;
+  font-size: 14px;
+  cursor: pointer;
+}
+#hamburger:hover{
+  color: #222;
+}
+#toggle-sm{
+  display: none;
+  float: left;
+}
+#toggle-sm:checked + #sidebar{
+  display: block;
+}
+#toggle-show{
+    display: none;
+}
+#toggle-hide{
+  display: none;
+}
+#chevron-left{
+  display: none;
+}
+#chevron-right{
+  display: none;
+}
+#sidebar{
+  display: none;
+  position: absolute;
+  margin-top: 50px;
+  padding-left: 2vh;
+  padding-right: 2vh;
+  width: 100%;
+  padding-bottom: 20px;
+  height: auto;
+  font-size: 14px;
+}

@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% from './macros/_render_field.html' import render_field  %}
+ 
+{% block links %}
+    
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/login.css') }}">
+    
+{% endblock links %}
+
+{% block content %}
+
+
+    <div class="row justify-content-sm-center pt-5">
+        <div class="col-sm-12 text-center">
+            <h1 class="display-4">Log In</h1>
+        </div>
+    </div>
+
+
+    <div class="row justify-content-sm-center pt-5">
+
+        <form class="col-sm-5" method="POST" autocomplete="off">
+
+            {{form.hidden_tag()}}
+
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                    {{ render_field(form.email, form.errors, placeholder='Email') }}
+                  </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                    {{ render_field(form.password, form.errors, placeholder='Password') }}
+                  </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-check">
+                    {{form.remember_me(id=form.remember_me.name,class='form-check-input')}}
+                    <label class="form-check-label" for="{{form.remember_me.name}}">{{form.remember_me.label.text}}</label> 
+                
+                  </div>
+            </div>
+ 
+
+            
+            {{form.submit(class='btn btn-primary  float-right')}}
+
+        </form>
+        
+
+    </div>
+
+{% endblock content %}

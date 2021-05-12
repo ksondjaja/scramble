@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% from './macros/_render_mcq.html' import render_mcq  %}
+
+{% block links %}
+
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/mcq_leader.css') }}">
+
+{% endblock links %}
+
+{% block scripts %}
+
+<script src="{{ url_for('static', filename='js/mcq/mcq_leader.js') }}" type="module" defer></script>
+
+{% endblock scripts %}
+
+{% block content %}
+
+<h2 class="mt-4">Leaderboard</h2>
+ 
+<ul class="nav nav-tabs mt-5">
+    <li class="nav-item">
+      <div id="nav-top-all" class="nav-link active">Top 10</div>
+    </li>
+
+    {% if current_user.is_authenticated %}
+    <li class="nav-item">
+        <div id="nav-top-user" class="nav-link ">Your Attempts</div>
+    </li>    
+    {% endif %}
+    
+</ul>
+
+
+ 
+    <table id="table-top-all" class="table table-hover">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">User</th>
+            <th scope="col">Score</th>
+            <th scope="col">Time Taken</th>
+          </tr>
+        </thead>
+        <tbody>
+    
+        {% for i in range(top_all|length) %}
+            
+          <tr>
+            <th scope="row">  {{ i+1 }} </th>
+            <td>{{ top_all[i].name }}</td>
+            <td>{{ top_all[i].score }}</td>
+            <td>{{ top_all[i].time_taken }}</td>
+          </tr>
+    
+          {% endfor %}
+        </tbody>
+      </table>
+    
+    {% if current_user.is_authenticated %}
+    <table id="table-top-user" class="table table-hover">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">User</th>
+            <th scope="col">Score</th>
+            <th scope="col">Time Taken</th>
+          </tr>
+        </thead>
+        <tbody>
+    
+        {% for i in range(top_user|length) %}
+            
+          <tr>
+            <th scope="row">  {{ i+1 }} </th>
+            <td>{{ top_user[i].name }}</td>
+            <td>{{ top_user[i].score }}</td>
+            <td>{{ top_user[i].time_taken }}</td>
+          </tr>
+    
+          {% endfor %}
+        </tbody>
+      </table> 
+    {% endif %}
+    
+ 
+
+
+{% endblock content %}

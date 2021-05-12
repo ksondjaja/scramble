@@ -1,0 +1,149 @@
+@import "partials/variables";
+
+@import "partials/common";
+@import "bootstrap/bootstrap";
+@import "bootstrap/bootstrap-grid";
+@import "bootstrap/bootstrap-reboot";
+
+/* Overrides */
+
+* {
+    box-sizing: border-box;
+}
+
+html,body {
+    padding:0;
+    margin: 0;
+    background-color:$body-bgc;
+    font-family: $font-primary;
+ 
+}
+
+a {
+
+    text-decoration: none !important;
+    color:$link-color;
+    transition:color .15s;
+
+}
+
+a:hover {
+    color:$link-color-hover;
+}
+
+/* Header Styles */
+
+
+
+header {
+    width:100%;
+    height:5vh;
+    min-height:50px;
+    background-color: $color-primary;
+    color:#fff;
+    display:flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding-right:1.5rem;
+
+    #header-profile {
+        background-color:#fff;
+        border:solid 1px #fff;
+        color:#222;
+        font-weight: 500;
+        padding:5px 10px;
+        border-radius: 3px;
+    }
+}
+
+
+#sidebar {
+    width:$sidebar-width;
+    height:100vh;
+    position:fixed;
+    top:0;
+    left:0;
+    background-color:#333;
+    color:#fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+     
+    
+    #sidebar-title {
+        padding-top:20px;
+        margin-bottom:1rem;
+        font-size:1em;
+        font-family: $font-title;
+    }
+
+
+    .sidebar-section {
+       
+        width:100%;
+        padding-left:1rem;
+
+        h2 {
+            font-size:1.4em;
+            color:#777;
+            display: flex;
+            font-weight: 400;
+      
+        }
+
+        h2:after{
+        
+            content: "";
+            flex: 1 1;
+            border-bottom: 1px solid #444;
+            margin: auto;  
+          
+        
+        }
+        
+        h2:before {
+        
+            margin-right: 10px
+        
+        }
+        
+        h2:after {
+        
+            margin-left: 10px
+        
+        }
+
+
+        ul {
+            list-style-type: none;
+            padding:0;
+            padding-left:5px;
+            
+            li {
+                
+                i {
+                    color:#eee;
+                    width:25px;
+                }
+                margin-bottom:1rem;
+            }
+        }
+
+    }
+    
+
+}
+
+#sidebar-ghost {
+    min-width:$sidebar-width;
+    min-height:100vh;
+}
+
+
+@media screen and (max-width:1000px) {
+    #sidebar, #sidebar-ghost {
+        display: none;
+    }
+}
+
+

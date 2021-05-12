@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <p>{{  message  }}</p>
+
+    <p>Please try registering again <a href={{  url_for('auth.register')  }}>here</a>.</p>
+
+{% endblock content %}

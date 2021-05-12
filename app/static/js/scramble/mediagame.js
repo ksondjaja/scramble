@@ -70,11 +70,11 @@ document.addEventListener('DOMContentLoaded', function(){
     var fill = [];
     var correct = [];
 
-    let title = document.querySelector('.title').getBoundingClientRect();
+    var title = document.querySelector('.title').getBoundingClientRect();
 
     playerarea.style.top = 50 + parseInt(title.bottom) + 'px' ;
 
-    let playerpos = playerarea.getBoundingClientRect();
+    var playerpos = playerarea.getBoundingClientRect();
     
     document.querySelector('.head').style.height = parseInt(title.bottom) + 'px';
 

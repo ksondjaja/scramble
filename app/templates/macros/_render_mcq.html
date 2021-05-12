@@ -1,0 +1,54 @@
+{% macro render_mcq(question) %}
+
+
+<div class="mcq-question" data-id="{{question.id}}">
+    
+    <div class="row mcq-question-header">
+
+        <div class="col-sm-6">MCQ</div>
+        <div class="col-sm-6">{{question.category}}</div>
+
+    </div>
+
+    
+    <div class="row mcq-question-title">
+        <div class="col">
+            {{question.title}}
+        </div>
+
+    </div>
+
+    <div class="row mcq-question-content">
+        <div class="col">
+            <p>
+            {{question.content}}
+            </p>
+        </div>
+
+    </div>
+
+
+    <div class="row mcq-question-options justify-content-center">
+
+
+        {% for option in question.options  %}
+            
+            <div class="col-sm-6 col-12 p-2">
+                
+                <div class="mcq-option" data-id="{{option.id}}">
+                    
+                    {{option.content}}
+                    
+                </div>
+                
+            </div>
+
+        {% endfor %}
+ 
+
+    </div>
+
+
+</div>
+ 
+{% endmacro %}

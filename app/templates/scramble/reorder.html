@@ -51,11 +51,7 @@
         
         {% if mode=='createpreview' %}
             <div id="nextbutton2">
-                {% if game_type=='text' %}
                     <a href={{  url_for('scramble.save')  }}><div class="approvebutton"><div class="fakebuttontext">Save Game</div></div></a>
-                {% elif game_type=='video' or game_type=='audio' %}
-                    <a href={{  url_for('scramble.savemedia')  }}><div class="approvebutton"><div class="fakebuttontext">Save Game</div></div></a>
-                {% endif %}
             </div>
         {% elif mode=='adminapprove' %}
             <div id="nextbutton2">
@@ -73,7 +69,7 @@
         {% if game_type=='video' %}
             <div class="player">
                 <video id="player" class="video-js" preload="auto" data-setup="{}">
-                    <source src={{ url_for('static', filename=media_path|safe) }} type={{  media_format|safe  }}>
+                    <source src={{ media_path|safe }} type={{  media_format|safe  }}>
                 </video>
                 <br>
                 <!-- <button id="playall">Play Sequence &#9658</button> -->
@@ -81,7 +77,7 @@
         {% elif game_type=='audio' %}
             <div class="player" height="0" width="0">
                 <audio id="player">
-                    <source src={{ url_for('static', filename=media_path|safe) }} type={{  media_format|safe  }}>
+                    <source src={{ media_path|safe }} type={{  media_format|safe  }}>
                 </audio>
                 <br>
                 <!-- <button id="playall">Play Sequence &#9658</button> -->

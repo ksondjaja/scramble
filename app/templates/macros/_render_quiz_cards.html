@@ -1,0 +1,49 @@
+{% macro render_quiz_card(quiz) %}
+ 
+    
+<div class="card-container col-lg-4 col-sm-6 col-12 mb-2">
+    <div class="card" data-id="{{quiz.id}}">
+    
+        <div class="card-body">
+
+            <h5 class="card-title"> {{quiz.title}}</h5>
+            <p class="card-text"> {{quiz.description}} </p>
+
+            {% if quiz.is_approved %}
+            
+            <div class="row p-2 align-items-center">
+                   
+                <a href="{{ url_for('mcq.quiz', id= quiz.id) }}"><button class="btn btn-primary m-2">Take Quiz</button></a>
+                <a href="{{ url_for('mcq.leaderboard', id= quiz.id) }}"><button class="btn btn-info">View Leaderboard</button></a>
+            
+            </div>
+                
+                
+            {% else %}
+                                
+                <div class="row p-2 justify-content-center align-items-center">
+                   
+                    <button  class="btn btn-info btn-view-quiz col m-2">View</button>
+                    <button  class="btn btn-primary btn-approve-quiz col m-2">Approve</button>
+                    <button  class="btn btn-danger btn-delete-quiz col m-2">Delete</button>
+                    
+                </div>
+            {% endif %}
+
+        </div>
+
+
+        <div class="card-footer">
+            <small class="text-muted">Created by {{quiz.user.first_name}} {{quiz.user.last_name}}</small>
+        </div>
+
+    </div>
+</div>
+
+
+{% endmacro %}
+
+
+
+ 
+

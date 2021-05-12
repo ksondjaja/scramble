@@ -1,0 +1,180 @@
+{% extends 'base.html' %}
+ 
+{% block links %}
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/mcq_create.css') }}">
+
+{% endblock links %}
+
+{% block scripts %}
+
+    <script src="{{ url_for('static', filename='js/mcq/create_mcq.js') }}" type="module" defer></script>
+
+{% endblock scripts %}
+ 
+
+
+{% block content %}
+
+
+
+
+    <div class="row align-items-center justify-content-center">
+        
+        <h2>
+            Create a Multiple Choice Quiz
+        </h2>
+    
+    </div>
+
+    <div class="row align-items-center justify-content-center">
+        <p><small>Your multiple choice quiz will be <mark>unapproved</mark> until accepted by an admin</small></p>
+    </div>
+ 
+
+    <div class="row mt-5 align-items-center justify-content-center">
+
+
+        <div class="col form-group col-4">
+        
+            <label>Quiz Title</label>
+            <input type="text" id="quiz-title" class="form-control" placeholder="Title">
+        
+        </div>
+
+        
+        <div class="col form-group col-4">
+        
+            <label>Short Description</label>
+            <input type="text" id="quiz-description" class="form-control" placeholder="Description">
+        
+        </div>
+
+
+ 
+    </div>
+
+
+    <div class="row  mb-5 align-items-center">
+
+
+ 
+    </div>
+
+    <hr />
+
+    <div class="row align-items-center justify-content-center mt-5 mb-5">
+        
+            <button id="btn-add-question" class="btn btn-primary m-1"><i class="fas fa-plus-circle pr-2"></i></i>Add Question </button>
+        
+            <button id="btn-submit-quiz" class="btn btn-primary m-1"><i class="fas fa-arrow-circle-down pr-2"></i>Submit Quiz</button>
+        
+    </div>
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+    <!-- Question Template -->
+    <template id="mcq-question-template">
+
+      
+
+        <div class="container question mt-5 mb-5"> 
+            
+  
+    
+            <div class="row  mt-5 ">
+                <div class="col pl-0">
+                    <p><strong>Question</strong></p>                
+                </div>
+                <div class="col flex align-items-center justify-content-end pr-0">
+                    <button class="btn btn-danger btn-remove-question"><i class="fas fa-minus-circle pr-2"></i></i>Remove Question</button>
+                </div>
+            </div>
+    
+            <div class="row mb-4 mt-4">
+                
+                <div class="col pl-0">
+                    
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input type="text" class="form-control question-title" placeholder="Question">
+                    </div>
+                   
+                    
+                </div>
+                <div class="col">
+                    
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select class="form-control question-category">
+                            <option>Syntactic Category</option>
+                            <option>Morphemes</option>
+                            <option>Tense and Aspect</option>
+                          </select>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col pl-0 pr-0 form-group">
+                    <label>Question Content</label>
+                    <textarea class="form-control question-content" rows="2"></textarea>
+                  </div>
+            </div>
+    
+            <div class="row mt-2 mb-2">
+                <p><strong>Options</strong></p>
+            </div>
+    
+    
+          
+            <!-- MCQ Option template goes here-->
+    
+            <div class="row">
+                <button  class="btn-add-option btn"><i class="fas fa-plus-circle pr-2"></i></i>Add Option </button>
+            </div>
+    
+        </div>
+    
+    
+    </template>
+
+                  
+    <template id="mcq-option-template">
+    
+        <div class="row mb-3 option">
+
+            <div class="col pl-0">
+                <div class="input-group">
+                    <input type="text" class="form-control option-content" placeholder="Option">
+                
+                    <div class="input-group-append">
+
+                        <div class="input-group-text "> Correct <input class="option-is-correct ml-2" type="checkbox"> </div>
+
+                    </div>
+                </div>
+                
+            </div>
+
+            <div class="col">
+                <button class="btn text-danger btn-remove-option"><i class="fas fa-minus-circle pr-2"></i>Remove Option</button>
+            </div>
+
+        </div>
+
+    </template>
+    
+{% endblock content %}

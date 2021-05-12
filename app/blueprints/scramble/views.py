@@ -1,4 +1,3 @@
-from manage import app
 from . import scramble
 from flask import Flask, render_template, request, session, redirect, url_for
 from flask_session import Session
@@ -12,6 +11,7 @@ from shutil import copyfile
 from . import util
 import random, pymysql, json, re, os, time, datetime
 from ast import literal_eval
+from . import helpers
 
 # app = Flask(__name__)
 
@@ -64,13 +64,13 @@ def seetimes(game_type):
 
     score_title = "Top 20 High Scores"
 
-    query = f"WITH game_ranking AS(SELECT *, RANK() OVER(ORDER BY game_time)ranking FROM scramble_scores WHERE game_type='{game_type}' AND game_difficulty='easy' LIMIT 20) SELECT ranking, first_name, game_difficulty, game_type, game_id, submit_time, SEC_TO_TIME(game_time) AS game_time_sec from game_ranking"
+    query = f"WITH game_ranking AS(SELECT *, RANK() OVER(ORDER BY game_time)ranking FROM scramble_scores WHERE game_type='{game_type}' AND game_difficulty='easy' LIMIT 20) SELECT ranking, first_name, game_difficulty, game_type, game_id, submit_time, game_time from game_ranking"
     easy = db.execute(query)
 
-    query = f"WITH game_ranking AS(SELECT *, RANK() OVER(ORDER BY game_time)ranking FROM scramble_scores WHERE game_type='{game_type}' AND game_difficulty='medium' LIMIT 20) SELECT ranking, first_name, game_difficulty, game_type, game_id, submit_time, SEC_TO_TIME(game_time) AS game_time_sec from game_ranking"
+    query = f"WITH game_ranking AS(SELECT *, RANK() OVER(ORDER BY game_time)ranking FROM scramble_scores WHERE game_type='{game_type}' AND game_difficulty='medium' LIMIT 20) SELECT ranking, first_name, game_difficulty, game_type, game_id, submit_time, game_time from game_ranking"
     medium = db.execute(query)
 
-    query = f"WITH game_ranking AS(SELECT *, RANK() OVER(ORDER BY game_time)ranking FROM scramble_scores WHERE game_type='{game_type}' AND game_difficulty='difficult' LIMIT 20) SELECT ranking, first_name, game_difficulty, game_type, game_id, submit_time, SEC_TO_TIME(game_time) AS game_time_sec from game_ranking"
+    query = f"WITH game_ranking AS(SELECT *, RANK() OVER(ORDER BY game_time)ranking FROM scramble_scores WHERE game_type='{game_type}' AND game_difficulty='difficult' LIMIT 20) SELECT ranking, first_name, game_difficulty, game_type, game_id, submit_time, game_time from game_ranking"
     difficult = db.execute(query)
     
     return render_template('scramble/scores.html', game_type=game_type, easy=easy, medium=medium, difficult=difficult, score_title=score_title)
@@ -92,13 +92,13 @@ def seemytimes(game_type):
     score_title = "My Game Scores"
     user_id = int(current_user.id)
 
-    query = f"WITH game_ranking AS(SELECT *, RANK() OVER(ORDER BY game_time)ranking FROM scramble_scores WHERE game_type='{game_type}' AND game_difficulty='easy') SELECT ranking, user_id, game_difficulty, game_type, game_id, submit_time, SEC_TO_TIME(game_time) AS game_time_sec from game_ranking WHERE user_id={user_id}"
+    query = f"WITH game_ranking AS(SELECT *, RANK() OVER(ORDER BY game_time)ranking FROM scramble_scores WHERE game_type='{game_type}' AND game_difficulty='easy') SELECT ranking, user_id, game_difficulty, game_type, game_id, submit_time, game_time from game_ranking WHERE user_id={user_id}"
     easy = db.execute(query)
 
-    query = f"WITH game_ranking AS(SELECT *, RANK() OVER(ORDER BY game_time)ranking FROM scramble_scores WHERE game_type='{game_type}' AND game_difficulty='medium') SELECT ranking, user_id, game_difficulty, game_type, game_id, submit_time, SEC_TO_TIME(game_time) AS game_time_sec from game_ranking WHERE user_id={user_id}"
+    query = f"WITH game_ranking AS(SELECT *, RANK() OVER(ORDER BY game_time)ranking FROM scramble_scores WHERE game_type='{game_type}' AND game_difficulty='medium') SELECT ranking, user_id, game_difficulty, game_type, game_id, submit_time, game_time from game_ranking WHERE user_id={user_id}"
     medium = db.execute(query)
 
-    query = f"WITH game_ranking AS(SELECT *, RANK() OVER(ORDER BY game_time)ranking FROM scramble_scores WHERE game_type='{game_type}' AND game_difficulty='difficult') SELECT ranking, user_id, game_difficulty, game_type, game_id, submit_time, SEC_TO_TIME(game_time) AS game_time_sec from game_ranking WHERE user_id={user_id}"
+    query = f"WITH game_ranking AS(SELECT *, RANK() OVER(ORDER BY game_time)ranking FROM scramble_scores WHERE game_type='{game_type}' AND game_difficulty='difficult') SELECT ranking, user_id, game_difficulty, game_type, game_id, submit_time, game_time from game_ranking WHERE user_id={user_id}"
     difficult = db.execute(query)
     
     return render_template('scramble/scores.html', game_type=game_type, easy=easy, medium=medium, difficult=difficult, score_title=score_title)
@@ -130,11 +130,11 @@ def playgame():
     game_difficulty = request.form["game_difficulty"]
 
     if game_difficulty == 'easy':
-        query = f"SELECT game_id, game_content, game_title, game_length FROM scramble_games WHERE is_approved=1 AND game_type='{played_game_type}' AND game_length<=7 order by rand() limit 1"
+        query = f"SELECT game_id, game_content, game_title, game_length FROM scramble_games WHERE is_approved=1 AND game_type='{played_game_type}' AND game_length<=7 ORDER BY RANDOM() LIMIT 1"
     elif game_difficulty == 'difficult':
-        query = f"SELECT game_id, game_content, game_title, game_length FROM scramble_games WHERE is_approved=1 AND game_type='{played_game_type}' AND game_length>=11 order by rand() limit 1"
+        query = f"SELECT game_id, game_content, game_title, game_length FROM scramble_games WHERE is_approved=1 AND game_type='{played_game_type}' AND game_length>=11 ORDER BY RANDOM() LIMIT 1"
     else:
-        query = f"SELECT game_id, game_content, game_title, game_length FROM scramble_games WHERE is_approved=1 AND game_type='{played_game_type}' AND game_length>=8 and game_length<=10 order by rand() limit 1"
+        query = f"SELECT game_id, game_content, game_title, game_length FROM scramble_games WHERE is_approved=1 AND game_type='{played_game_type}' AND game_length>=8 and game_length<=10 ORDER BY RANDOM() LIMIT 1"
 
     game = db.execute(query).fetchone()
 
@@ -173,9 +173,8 @@ def playgame():
         end = game_content[f"{game_length-1}"].split(" ")
         full_media = f"{start[0]} {end[1]}"
 
+        media_path = util.get_s3_object_path(f'uploaded_games/{game_title}')
         media_format = f'{played_game_type}/{game_title.split(".")[-1]}'
-
-        media_path = f'res/uploads/{game_title}'
         
         session['media_path'] = media_path
         session['media_file_name'] = game_title
@@ -266,6 +265,7 @@ def submittime():
     """Saves player's game time in scramble_scores table"""
 
     timer = int(request.form["time"])
+    timer = datetime.timedelta(seconds=timer)
     
     if 'game_id' in session:
         game_id = session.get("game_id")
@@ -303,7 +303,7 @@ def lastgamescore():
     game_difficulty = session.get("game_difficulty")
     played_game_type = session.get("played_game_type")
 
-    query = f"WITH game_ranking AS(SELECT game_epoch_time, user_id, first_name, game_difficulty, game_type, game_time, RANK() OVER(ORDER BY game_time)ranking FROM scramble_scores) SELECT ranking, first_name, game_difficulty, game_type, SEC_TO_TIME(game_time) AS game_time_sec from game_ranking WHERE game_epoch_time={epoch_time} AND user_id='{user_id}'"
+    query = f"WITH game_ranking AS(SELECT game_epoch_time, user_id, first_name, game_difficulty, game_type, game_time, RANK() OVER(ORDER BY game_time DESC)ranking FROM scramble_scores) SELECT ranking, first_name, game_difficulty, game_type, game_time from game_ranking WHERE game_epoch_time={epoch_time} AND user_id='{user_id}'"
     ranking = db.execute(query).fetchone()
 
     session.pop('played_game_type', None)
@@ -339,6 +339,15 @@ def managegames():
 def adminpreview(table, game_id):
     """Preview games in databases to administrator"""
 
+    if 'game_content' in session:
+        session.pop('game_content', None)
+    if 'game_id' in session:
+        session.pop('game_id', None)
+    if 'media_path' in session:
+        session.pop('media_format', None)
+    if 'media_type' in session:
+        session.pop('media_type', None)
+
     if current_user.is_admin != 1:
         return redirect(url_for('scramble.managesubmitted'))
 
@@ -347,23 +356,29 @@ def adminpreview(table, game_id):
     game_content = literal_eval(game[0])
     game_type = game[1]
     game_title = game[2]
-    mode = "preview"
 
-    media_path = f'res/uploads/{game_title}'
-    media_format = f'{game_type}/{game_title.split(".")[-1]}'
-
-    if table==0:
+    if table=='0':
         session['mode'] = 'adminapprove'
-    elif table==1:
+    elif table=='1':
         session['mode'] = 'preview'
+
+
+    if game_type in ['audio', 'video']:
+
+        if table=='0':
+            session['media_path'] = util.get_s3_object_path(f'temporary/{game_title}')
+        elif table=='1':
+            session['media_path'] = util.get_s3_object_path(f'uploaded_games/{game_title}')
+
+        media_format = f'{game_type}/{game_title.split(".")[-1]}'
+
+        session['media_file_name'] = game_title
+        session['media_format'] = media_format
+    
 
     session['game_id'] = game_id
     session['game_content'] = game_content
-    session['media_path'] = media_path
-    session['media_file_name'] = game_title
-    session['media_format'] = media_format
     session['game_type'] = game_type
-    session['mode'] = mode
     
 
     if game_type == 'text':
@@ -375,27 +390,32 @@ def adminpreview(table, game_id):
 @scramble.route('/adminapprove/<game_id>')
 @login_required
 def adminapprove(game_id):
-    """Lets administrator approve user-submitted games (by moving a game from scramble_to_approve table to scramble_games table in MySQL)"""
+    """Lets administrator approve user-submitted games (by changing is_approved from 0 to 1)"""
 
     if current_user.is_admin != 1:
         return redirect(url_for('scramble.index'))
 
-    query = f"SELECT game_category FROM scramble_games WHERE is_approved=0 AND game_id={game_id}"
-    category = db.execute(query).fetchone()[0]
+    query = f"SELECT game_category, game_type, game_title FROM scramble_games WHERE is_approved=0 AND game_id={game_id}"
+    game_category = db.execute(query).fetchone()[0]
+    game_type = db.execute(query).fetchone()[1]
+    game_title = db.execute(query).fetchone()[2]
 
-    allcatquery, allcat = util.getCategories()
+    # allcatquery, allcat = util.get_categories()
 
-    if category not in allcat:
-        query = f"ALTER TABLE scramble_games MODIFY COLUMN game_category {allcatquery[:len(allcatquery)-1]}, '{category}')"
-        db.execute(query)
+    # if game_category not in allcat:
+    #     query = f"ALTER TABLE scramble_games MODIFY COLUMN game_category {allcatquery[:len(allcatquery)-1]}, '{game_category}')"
+    #     db.execute(query)
     
     approved_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
     query = f"UPDATE scramble_games SET is_approved=1, approved_time = '{approved_time}' WHERE game_id={game_id}"
-    #query = f"INSERT INTO scramble_games(approved_time, game_id, user_id, first_name, user_email, submit_time, game_type, game_length, game_category, game_title, game_content) SELECT '{approved_time}', game_id, user_id, first_name, user_email, submit_time, game_type, game_length, game_category, game_title, game_content from scramble_to_approve WHERE game_id={game_id}"
     db.execute(query)
-    # query = f"DELETE FROM scramble_to_approve WHERE game_id={game_id}"
-    # db.execute(query)
+    
+
+    if game_type in ['video', 'audio']:
+
+        util.copy_to_s3_permanent_folder(game_title)
+        util.delete_from_s3('temporary', game_title)
     
     return redirect(url_for('scramble.managegames'))
 
@@ -403,7 +423,7 @@ def adminapprove(game_id):
 @scramble.route('/admindiscard/<table>/<game_id>')
 @login_required
 def admindiscard(table, game_id):
-    """Lets administrator delete games (from either scramble_to_approve or scramble_approved table)"""
+    """Lets administrator delete games (either approved or not yet approved)"""
 
     query = f"SELECT game_title, game_type FROM scramble_games WHERE is_approved={table} AND game_id={game_id}"
     game_info = db.execute(query).fetchone()
@@ -414,10 +434,19 @@ def admindiscard(table, game_id):
     db.execute(query)
 
     if game_type in ['video', 'audio']:
-        perm_dir = config['default'].UPLOAD_DIRECTORY
-        path = os.path.join(perm_dir, secure_filename(game_title))
 
-        os.remove(path)
+        # perm_dir = config['default'].UPLOAD_DIRECTORY
+        # path = os.path.join(perm_dir, secure_filename(game_title))
+
+        # os.remove(path)
+
+        if table=='0':
+            s3_folder = 'temporary'
+        else:
+            s3_folder = 'uploaded_games'
+
+        util.delete_from_s3(s3_folder, game_title)
+
 
     return redirect(url_for('scramble.managegames'))
 
@@ -440,13 +469,13 @@ def managescores(game_type):
 
     score_title = "Manage Scores"
 
-    query = f"WITH game_ranking AS(SELECT *, RANK() OVER(ORDER BY game_time)ranking FROM scramble_scores WHERE game_type='{game_type}' AND game_difficulty='easy') SELECT score_id, ranking, first_name, user_id, game_difficulty, game_type, game_id, submit_time, SEC_TO_TIME(game_time) AS game_time_sec from game_ranking"
+    query = f"WITH game_ranking AS(SELECT *, RANK() OVER(ORDER BY game_time)ranking FROM scramble_scores WHERE game_type='{game_type}' AND game_difficulty='easy') SELECT score_id, ranking, first_name, user_id, game_difficulty, game_type, game_id, submit_time, game_time from game_ranking"
     easy = db.execute(query)
 
-    query = f"WITH game_ranking AS(SELECT *, RANK() OVER(ORDER BY game_time)ranking FROM scramble_scores WHERE game_type='{game_type}' AND game_difficulty='medium') SELECT score_id, ranking, first_name, user_id, game_difficulty, game_type, game_id, submit_time, SEC_TO_TIME(game_time) AS game_time_sec from game_ranking"
+    query = f"WITH game_ranking AS(SELECT *, RANK() OVER(ORDER BY game_time)ranking FROM scramble_scores WHERE game_type='{game_type}' AND game_difficulty='medium') SELECT score_id, ranking, first_name, user_id, game_difficulty, game_type, game_id, submit_time, game_time from game_ranking"
     medium = db.execute(query)
 
-    query = f"WITH game_ranking AS(SELECT *, RANK() OVER(ORDER BY game_time)ranking FROM scramble_scores WHERE game_type='{game_type}' AND game_difficulty='difficult') SELECT score_id, ranking, first_name, user_id, game_difficulty, game_type, game_id, submit_time, SEC_TO_TIME(game_time) AS game_time_sec from game_ranking"
+    query = f"WITH game_ranking AS(SELECT *, RANK() OVER(ORDER BY game_time)ranking FROM scramble_scores WHERE game_type='{game_type}' AND game_difficulty='difficult') SELECT score_id, ranking, first_name, user_id, game_difficulty, game_type, game_id, submit_time, game_time from game_ranking"
     difficult = db.execute(query)
     
     return render_template('scramble/scores.html', game_type=game_type, easy=easy, medium=medium, difficult=difficult, score_title=score_title)
@@ -484,29 +513,55 @@ def managesubmitted():
 def userpreview(table, game_id):
     """Preview games in databases to the user that submitted them"""
 
-    user_id = current_user.id
+    if 'game_content' in session:
+        session.pop('game_content', None)
+    if 'game_id' in session:
+        session.pop('game_id', None)
+    if 'media_path' in session:
+        session.pop('media_format', None)
+    if 'media_type' in session:
+        session.pop('media_type', None)
 
-    query = f"SELECT game_content, user_id, game_type FROM scramble_games WHERE is_approved={table} AND game_id={game_id}"
+    user_id = current_user.id    
 
-    if user_id != db.execute(query).fetchone()[1]:
+    query = f"SELECT game_content, game_type, game_title, user_id FROM scramble_games WHERE is_approved={table} AND game_id={game_id}"
+    game = db.execute(query).fetchone()
+    game_content = literal_eval(game[0])
+    game_type = game[1]
+    game_title = game[2]
+    game_user_id = game[3]
+
+    if user_id != game_user_id:
         return redirect(url_for('scramble.index'))
 
-    game_content = literal_eval(db.execute(query).fetchone()[0])
-    session['game_content'] = game_content
-
-    game_type = db.execute(query).fetchone()[2]
-
-    if table==0:
+    if table=='0':
         session['mode'] = 'usersubmitted'
-    elif table==1:
+    elif table=='1':
         session['mode'] = 'preview'
 
+
+    if game_type in ['audio', 'video']:
+        
+        if table=='0':
+            session['media_path'] = util.get_s3_object_path(f'temporary/{game_title}')
+        elif table=='1':
+            session['media_path'] = util.get_s3_object_path(f'uploaded_games/{game_title}')
+
+        media_format = f'{game_type}/{game_title.split(".")[-1]}'
+
+        session['media_file_name'] = game_title
+        session['media_format'] = media_format
+    
+
     session['game_id'] = game_id
+    session['game_content'] = game_content
+    session['game_type'] = game_type
+    
 
     if game_type == 'text':
         return redirect(url_for('scramble.textgame'))
-    elif game_type == 'video':
-        return redirect(url_for('scramble.videogame'))
+    elif game_type in ['video', 'audio']:
+        return redirect(url_for('scramble.mediagame'))
 
 ##------------------------------------------------- CREATE GAME--------------------------------------------------------------------##
 
@@ -515,22 +570,37 @@ def userpreview(table, game_id):
 def cancelcreate():
     """Let user cancel game creation, deletes autosaved game info from session"""
 
+    if 'game_type' in session:
+        game_type = session.get('game_type')
+        
+        if game_type in ['audio', 'video']:
+
+            if 'game_title' in session:
+                util.delete_from_s3('temporary', game_title)
+                session.pop('game_title', None)
+
+        session.pop('game_type', None)
+
+    if 'game_content' in session:
+        session.pop('game_content', None)
     if 'game_title' in session:
         session.pop('game_title', None)
-        session.pop('game_type', None)
+    if 'game_length' in session:
+        session.pop('game_length', None)
+    if 'game_category' in session:
         session.pop('game_category', None)
-        session.pop('allcatquery', None)
+    if 'newcat' in session:
         session.pop('newcat', None)
-        if 'media_temp_path' in session:
-            session.pop('media_temp_path', None)
-            session.pop('media_file_name', None)
-            session.pop('media_format', None)
-        if 'game_content' in session:
-            session.pop('game_content', None)
-        if 'game_input' in session:
-            session.pop('game_input', None)
-        if 'game_length' in session:
-            session.pop('game_length', None)
+    if 'media_file_name' in session:
+        session.pop('media_file_name', None)
+    if 'media_format' in session:
+        session.pop('media_format', None)
+    if 'media_path' in session:
+        session.pop('media_path', None)
+    if 'media_temp_path' in session:
+        session.pop('media_temp_path', None)
+    if 'full_media' in session:
+        session.pop('full_media', None)
 
     return redirect(url_for('scramble.index'))
 
@@ -545,18 +615,17 @@ def gameinfo():
         game_title = session.get('game_title')
         game_type = session.get('game_type')
         game_category = session.get('game_category')
-        newcat = session.get('newcat')
-        saved = {'game_title':game_title, 'game_type':game_type, 'game_category':game_category, 'newcat':newcat}
     else:
-        saved = dict()
+        game_title = ''
+        game_type = ''
+        game_category = ''
 
-    allcatquery, allcat = util.getCategories()
+    allcat = util.get_categories()
 
-    session['allcatquery'] = allcatquery
+    #session['allcatquery'] = allcatquery
     session['allcat'] = allcat
-    session['saved'] = saved
-    message=""
-    return render_template("scramble/gameinfo.html", allcat=allcat, saved=saved, message=message)
+    message=''
+    return render_template("scramble/gameinfo.html", allcat=allcat, game_title=game_title, game_type=game_type, game_category=game_category, message=message)
 
 
 @scramble.route('/create', methods=["GET", "POST"])
@@ -564,11 +633,10 @@ def gameinfo():
 def create():
     """Store form input to submit new game"""
 
-    if 'saved' in session:
-        saved = session.get('saved')
-
-    if 'game_type' in session:
+    if 'game_title' in session:
+        game_title = session.get('game_title')
         game_type = session.get('game_type')
+        game_category = session.get('game_category')
 
     if 'allcat' in session:
         allcat = session.get('allcat')
@@ -589,7 +657,7 @@ def create():
         game_title = str(request.form.get("game_title"))
         game_type = str(request.form.get("game_type"))
         game_category = str(request.form.get("game_category"))
-        newcat = ""
+        newcat = ''
 
         #If 'Video' game type is selected, get YouTube link
         # if game_type == 'video':
@@ -604,7 +672,7 @@ def create():
                 newcat = "other"
             else:
                 message = "The category you entered already exists. Please select it from the dropdown menu."
-                return render_template("scramble/gameinfo.html", allcat=allcat, saved=saved, message=message)
+                return render_template("scramble/gameinfo.html", allcat=allcat, game_title=game_title, game_type=game_type, game_category=game_category, message=message)
         
         # Store form input into session
         session['game_title'] = game_title
@@ -704,7 +772,7 @@ def uploadtmp():
 
     upload_time = int(datetime.datetime.now().timestamp())
 
-    tmp_dir = config['default'].UPLOAD_DIRECTORY_TMP
+    #tmp_dir = config['default'].UPLOAD_DIRECTORY_TMP
     
     if request.files:
 
@@ -721,22 +789,21 @@ def uploadtmp():
             message = f"Please select a .mp4 video file sized under {max_mb}MB"
             
             if (size > max_mb*1024*1024) or (file_name[-1] not in ["mp4"]):
-                return render_template("scramble/uploadmedia.html", message=message, extension=extension, size=size)
+                return render_template("scramble/createmedia.html", message=message, extension=extension, size=size)
         elif game_type == 'audio':
             message = f"Please select a .mp3 or .wav audio file sized under {max_mb}MB"
             
             if (size > max_mb*1024*1024) or (file_name[-1] not in ["mp3", "wav"]):
-                return render_template("scramble/uploadmedia.html", message=message, extension=extension, size=size)
+                return render_template("scramble/createmedia.html", message=message, extension=extension, size=size)
         
 
         if uploaded_file.filename != '':
-            path = os.path.join(tmp_dir, secure_filename(media_file_name))
-            uploaded_file.save(path)
+            util.upload_file_to_s3(uploaded_file, f'temporary/{media_file_name}')
+            #path = os.path.join(tmp_dir, secure_filename(media_file_name))
+            #uploaded_file.save(path)
     
-        media_temp_path = f'res/tmp/{media_file_name}'
         media_format = f"{game_type}/{file_name[-1]}"
 
-        session['media_temp_path'] = media_temp_path
         session['media_file_name'] = media_file_name
         session['media_format'] = media_format
 
@@ -756,10 +823,12 @@ def createmedia():
     game_input = "multifields"
 
     game_type = session.get('game_type')
-
-    media_temp_path = session.get('media_temp_path')
     media_file_name = session.get('media_file_name')
     media_format = session.get('media_format')
+
+    media_temp_path = util.get_s3_object_path(f'temporary/{media_file_name}')
+
+    session['media_temp_path'] = media_temp_path
 
     return render_template("scramble/createmedia2.html", media_temp_path=media_temp_path, media_format=media_format, game_content=game_content, game_input=game_input, game_type=game_type)
 
@@ -813,24 +882,26 @@ def previewmedia2():
     return render_template("scramble/previewmedia.html", game_type=game_type, game_content=game_content, media_temp_path=media_temp_path, media_format=media_format, full_media=full_media)
 
 
-@scramble.route('/savemedia', methods=['GET'])
-@login_required
-def savemedia():
-    """Save audio or video game file by moving file from temporary to permanent folder"""
+# @scramble.route('/savemedia', methods=['GET'])
+# @login_required
+# def savemedia():
+#     """Save audio or video game file by moving file from temporary to permanent folder"""
 
-    game_title = session.get('media_file_name')
+#     game_title = session.get('media_file_name')
 
-    tmp_dir = config['default'].UPLOAD_DIRECTORY_TMP
-    perm_dir = config['default'].UPLOAD_DIRECTORY
+#     tmp_dir = config['default'].UPLOAD_DIRECTORY_TMP
+#     perm_dir = config['default'].UPLOAD_DIRECTORY
 
-    src = os.path.join(tmp_dir, secure_filename(game_title))
-    dst = os.path.join(perm_dir, secure_filename(game_title))
+#     src = os.path.join(tmp_dir, secure_filename(game_title))
+#     dst = os.path.join(perm_dir, secure_filename(game_title))
 
-    copyfile(src, dst)
+#     copyfile(src, dst)
 
-    session['game_title'] = game_title
+
+
+#     session['game_title'] = game_title
     
-    return redirect(url_for('scramble.save'))
+#     return redirect(url_for('scramble.save'))
 
 
 # Create New Game - Step5: save game into SQL database
@@ -839,7 +910,8 @@ def savemedia():
 def save():
     """Save game information into SQL table to be reviewed by administrator"""
 
-    game_content = json.dumps(session.get('game_content'))
+    game_content = session.get('game_content')
+    game_content_json = json.dumps(game_content)
     user_id =  int(current_user.id)
     first_name = current_user.first_name
     user_email =  current_user.email
@@ -849,28 +921,42 @@ def save():
     game_type = session.get('game_type')
     game_category = session.get('game_category')
     newcat = session.get('newcat')
-    allcatquery = session.get('allcatquery')
-    if newcat == "other":
-        query = f"ALTER TABLE scramble_games MODIFY COLUMN game_category {allcatquery[:len(allcatquery)-1]}, '{game_category}')"
-        db.execute(query)
+    
+    if game_type in ['audio', 'video']:
+        media_file_name = session.get('media_file_name')
+
+    #allcatquery = session.get('allcatquery')
+    # if newcat == "other":
+    #     query = f"ALTER TABLE scramble_games MODIFY COLUMN game_category {allcatquery[:len(allcatquery)-1]}, '{game_category}')"
+    #     db.execute(query)
+    
     query = "INSERT INTO scramble_games(user_id, first_name, user_email, submit_time, game_title, game_length, game_type, game_category, game_content) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s)"
-    val = (user_id, first_name, user_email, submit_time, game_title, game_length, game_type, game_category, game_content)
+    
+    if game_type == 'text':
+        val = (user_id, first_name, user_email, submit_time, game_title, game_length, game_type, game_category, game_content_json)
+    else:
+        val = (user_id, first_name, user_email, submit_time, media_file_name, game_length, game_type, game_category, game_content_json)
+    
     db.execute(query, val)
 
     # Remove any previous form input from session
-    # Do not drop username & useremail from session if housed in larger website
+    session.pop('game_content', None)
     session.pop('game_title', None)
     session.pop('game_length', None)
     session.pop('game_type', None)
     session.pop('game_category', None)
-    session.pop('allcatquery', None)
     session.pop('newcat', None)
-    session.pop('game_content', None)
-    session.pop('saved', None)
-    if 'game_input' in session:
-        session.pop('game_input', None)
-    if 'mode' in session:
-        session.pop('mode', None)
+
+    if 'media_file_name' in session:
+        session.pop('media_file_name', None)
+    if 'media_format' in session:
+        session.pop('media_format', None)
+    if 'media_path' in session:
+        session.pop('media_path', None)
+    if 'media_temp_path' in session:
+        session.pop('media_temp_path', None)
+    if 'full_media' in session:
+        session.pop('full_media', None)
 
     return render_template("scramble/saved.html")
 

@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% from './macros/_render_quiz_cards.html' import render_quiz_card  %}
+ 
+
+{% block links %}
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/mcq_index.css') }}">
+
+{% endblock links %}
+
+
+
+{% block scripts %}
+
+    <script src="{{ url_for('static', filename='js/mcq/approve_mcq.js') }}" type="module" defer></script>
+
+{% endblock scripts %}
+
+
+
+{% block content %}
+
+<div class="container">
+
+    <div class="row mt-5 mb-2 justify-content-between">
+        <h3>Multiple Choice Quizzes</h3>
+    </div>
+
+    {% if not current_user.is_authenticated %}
+        <div class="row mb-4">
+            <mark>Warning: You are not logged in, any attempts will be logged under <em>Guest</em>.</mark>
+        </div>
+
+    {% else %}
+    
+        <div class="row justify-content-end mb-4">
+            <a class="btn btn-secondary text-white" role="button" href="{{ url_for('mcq.create') }}" >Create Quiz</a> 
+        </div>
+
+    {% endif %}
+
+    
+    <div id="approved-quizzes" class="row">
+
+        {% for quiz in quizzes %}
+        
+            {% if quiz.is_approved %}
+                
+                {{render_quiz_card(quiz)}}
+
+            {% endif %}
+
+        {% endfor %}
+
+    </div>
+
+
+    {% if current_user.is_admin %}
+        <div class="row mt-5 mb-5 justify-content-between">
+        <h3>Unapproved Quizzes</h3>
+        </div>
+    
+    
+        <div id="unapproved-quizzes" class="row">
+            
+            {% for quiz in quizzes %}
+    
+            {% if quiz.is_approved == False %}
+                
+                {{render_quiz_card(quiz)}}
+            
+            {% endif %}
+    
+            
+            {% endfor %}
+    
+    
+        </div>
+
+    {% endif %}
+
+
+
+
+
+
+</div>
+
+
+{% endblock content %}
+ 

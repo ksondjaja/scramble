@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+ 
+
+{% block links %}
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/exam_create.css') }}">
+
+{% endblock links %}
+
+
+ 
+
+{% block content %}
+
+<div class="container">
+
+    <div class="row mt-5 mb-2 justify-content-between">
+        <h3>Exams</h3>
+    </div>
+
+    {% if not current_user.is_authenticated %}
+        <div class="row mb-4">
+            <mark>Warning: You are not logged in, any attempts will be logged under <em>Guest</em>.</mark>
+        </div>
+
+    {% elif current_user.is_admin %}
+    
+        <div class="row justify-content-end mb-4">
+            <a class="btn btn-secondary" role="button" href="{{ url_for('mcq.create') }}" >Create Exam</a> 
+        </div>
+
+    {% endif %}
+
+ 
+ 
+
+
+
+
+
+
+</div>
+
+
+{% endblock content %}
+ 

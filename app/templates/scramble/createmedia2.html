@@ -199,11 +199,11 @@
 
             {% if game_type == 'video' %}
                 <video id="player" class="video-js" preload="auto" width="640" height="360" data-setup="{}" controls>
-                    <source src={{ url_for('static', filename=media_temp_path|safe) }} type={{  media_format|safe  }}>
+                    <source src={{ media_temp_path|safe }} type={{  media_format|safe  }}>
                 </video>
             {% elif game_type == 'audio' %}
                 <audio id="player" controls>
-                    <source src={{ url_for('static', filename=media_temp_path|safe) }} type={{  media_format|safe  }}>
+                    <source src={{ media_temp_path|safe }} type={{  media_format|safe  }}>
                 </audio>
             {% endif %}
 

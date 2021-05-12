@@ -1,0 +1,14 @@
+
+How to Set Up (Windows)
+--------------
+
+1.) Navigate to this directory, right click, and click on "Git Bash" here
+2.) run the command "git pull". This will update this directory to the latest changes made by us
+3.) Close git bash. Open Command Prompt on this directory
+    i.) Write the command "./Source/Scripts/activate" to activate the virutal environment, this is a place
+        where all of the frameworks are downloaded. You have to activate this before you can use the frameworks.
+    ii.) Sometimes, there may be new frameworks to download that we add. All the frameworks are listed in requirements.txt. You can 
+         download all the required frameworks by running the command "python -m pip install -r requirements.txt"
+    iii.) Finally, you can start the app by running "python manage.py runserver"
+
+4.) To view the app, go to any browser and go to the link: "127.0.0.1:5000/"

@@ -1,0 +1,37 @@
+
+header #menu-expand{
+    display: none;
+    float: left;
+    margin-top: 1vh;
+    color: white;
+    padding: 5px 10px;
+    margin-left: 310px;
+}
+#hamburger{
+    display: none;
+}
+#toggle-sm{
+    display: none;
+}
+#toggle-show{
+    display: none;
+    float: left;
+}
+#toggle-show:checked + #sidebar{
+    display: flex;
+}
+#toggle-hide{
+    display: none;
+    float: left;
+}
+#toggle-hide:checked + #sidebar{
+    display: none;
+}
+#chevron-left{
+    display: inline-block;
+    cursor: pointer;
+}
+#chevron-right{
+    display: inline-block;
+    cursor: pointer;
+}
