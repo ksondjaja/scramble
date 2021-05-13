@@ -1,5 +1,5 @@
 from sqlalchemy import create_engine
-from config import config, S3_KEY, S3_SECRET, S3_BUCKET
+from config import config, S3_KEY, S3_SECRET, S3_BUCKET, S3_OBJECT_LOCATION
 import os, re, boto3, botocore
 
 database_uri = config['default'].SQLALCHEMY_DATABASE_URI
@@ -87,30 +87,5 @@ def delete_from_s3(s3_folder, game_title):
 
 
 def get_s3_object_path(media_file_name):
-    return f'https://{S3_BUCKET}.s3.ca-central-1.amazonaws.com/{media_file_name}'
+    return f'{S3_OBJECT_LOCATION}/{media_file_name}'
 
-# def getVideoId(youtubelink):
-#     """Get just the video ID from a YouTube video link"""
-
-#     if 'watch?v=' in youtubelink:
-#         ind = youtubelink.index('watch?v=')
-#         ind += 8
-#         if len(youtubelink)<(ind+11):
-#             return 'invalid'
-#         else:
-#             videoid = youtubelink[ind:(ind+11)]
-#             return videoid
-#     else:
-#         return 'invalid'
-
-# def get_presigned_url(object_name, expiration=3600):
-#     #Template from https://boto3.amazonaws.com/v1/documentation/api/latest/guide/s3-presigned-urls.html
-#     try:
-#         response = s3.generate_presigned_url('get_object', Params={
-#             'Bucket': S3_BUCKET,
-#             'Key': object_name
-#         }, ExpiresIn=expiration)
-#     except Exception as e:
-#         return e
-
-#     return response
